@@ -1,0 +1,143 @@
+% This document is based on http://math.shinshu-u.ac.jp/~hanaki/beamer/beamer.html
+\documentclass[dvipdfmx,cjk]{beamer}
+%\documentclass[dvipdfm,cjk]{beamer} % オプションは環境や利用するプログラムによって変える
+%\documentclass[dvips,cjk]{beamer}
+
+% しおり（PDF にしたときの目次）の文字化け防止
+\AtBeginDvi{\special{pdf:tounicode 90ms-RKSJ-UCS2}}
+%\AtBeginDvi{\special{pdf:tounicode EUC-UCS2}}
+
+% 右下のアイコンを消す
+\setbeamertemplate{navigation symbols}{}
+
+% テーマ
+\usetheme{CambridgeUS}
+%\usetheme{Boadilla}           %% Beamer のディレクトリの中の
+%\usetheme{Madrid}             %% beamerthemeCambridgeUS.sty を指定
+%\usetheme{Antibes}            %% 色々と試してみるといいだろう
+%\usetheme{Montpellier}        %% サンプルが beamer\doc に色々とある。
+%\usetheme{Berkeley}
+%\usetheme{Goettingen}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+
+\usecolortheme{rose}          %% colortheme を選ぶと色使いが変わる
+%\usecolortheme{albatross}
+
+%\useoutertheme{shadow}                 %% 箱に影をつける
+\usefonttheme{professionalfonts}       %% 数式の文字を通常の LaTeX と同じにする
+
+%\setbeamercovered{transparent}         %% 消えている文字をうっすらと表示する
+%\setbeamertemplate{theorems}[numbered]  %% 定理に番号をつける
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{proposition}[thm]{Proposition}
+\theoremstyle{example}
+\newtheorem{exam}[thm]{Example}
+\newtheorem{remark}[thm]{Remark}
+\newtheorem{question}[thm]{Question}
+\newtheorem{prob}[thm]{Problem}
+\newtheorem{review}[thm]{Review}
+
+% メタ情報
+\begin{document}
+\title[多変量解析]{ベイス判別 非線形ロジスティック判別}
+\author[]{照屋 佑喜仁}
+\institute[]{}
+\date{\today}
+
+% タイトルスライド
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% 目次（\section 名が自動で挿入される）
+\begin{frame}
+    \tableofcontents
+\end{frame}
+
+% セクション名（サンプルでは左上のスペースに表示される）
+\section{非線形ロジスティック判別}
+\begin{frame}
+    \frametitle{非線形ロジスティック判別} % スライドのタイトル
+    \begin{itemize}
+        \item 前回，線形ロジスティック判別法により2群判別を行ったが，両群の構造が複雑だと
+              線形判別法でうまく判別できないことがある．
+        \item \alert{非線形関数}による判別法の構成が必要
+        \item 以前学んだロジスティック回帰モデルの非線形化と同様にして線形ロジスティック判別の
+              非線形化を行う．
+    \end{itemize}
+\end{frame}
+\begin{frame}
+    \frametitle{非線形ロジスティック判別}
+    \begin{review}
+        $G_1$，$G_2$いずれかの群から$p$次元データ$\boldsymbol{x}$が観測されたとする．このデータが群$G_1$
+        に属すると仮定した場合の事後確率$P(G_1|\boldsymbol{x})$と，群$G_2$に属すると仮定した場合の
+        事後確率$P(G_2|\boldsymbol{x})$との比の対数を変数の線形結合で表されると仮定したのが線形ロジスティック判別
+        であった．（前回）
+        \begin{align*}
+            \log \frac{P(G_1|\boldsymbol{x})}{P(G_2|\boldsymbol{x})}=\beta_0+\boldsymbol{\beta}^T\boldsymbol{x}
+        \end{align*}
+    \end{review}
+\end{frame}
+
+\begin{frame}
+    \frametitle{非線形ロジスティック判別}
+    非線形ロジスティック判別では，変数の線形結合ではなく変数の非線形関数で表すことによって行う．\\
+    この非線形関数を基底関数$b_0(\boldsymbol{x})\equiv 1,\ b_1(\boldsymbol{x}),\cdots b_m(\boldsymbol{x})$の線形結合で表す．
+    \begin{align*}
+        \log \frac{P(G_1|\boldsymbol{x})}{P(G_2|\boldsymbol{x})}=\sum_{j=0}^{m}w_jb_j(\boldsymbol{x})=\boldsymbol{w}^T\boldsymbol{b}(\boldsymbol{x})\tag{7.38}
+    \end{align*}
+    ただし$\boldsymbol{w}=(w_0,w_1,\cdots, w_m)^T$はパラメータベクトル（重みベクトル），
+    $\boldsymbol{b}(\boldsymbol{x})=(b_0(\boldsymbol{x}),\cdots,b_0(\boldsymbol{x}))^T$は基底関数ベクトルとする．
+\end{frame}
+
+\begin{frame}
+    \frametitle{非線形ロジスティック判別}
+    2群の事後確率について，$P(G_2|\boldsymbol{x})=1-P(G_1|\boldsymbol{x})$なので，(7.38)式は
+    \begin{align*}
+        \log\frac{P(G_1|\boldsymbol{x})}{1-P(G_1|\boldsymbol{x})}=\boldsymbol{w}^T\boldsymbol{b}(\boldsymbol{x}) \\
+        \therefore P(G_1|\boldsymbol{x})=\frac{\exp\left\{\boldsymbol{w}^T\boldsymbol{b}(\boldsymbol{x})\right\}}{1+\exp \left\{\boldsymbol{w}^T\boldsymbol{b}(\boldsymbol{x})\right\}}
+    \end{align*}
+    この事後確率を反応確率と考えると，以前学習した非線形ロジスティックモデルに対応していることがわかる．\\
+
+    \begin{review}
+        ロジスティックモデルとは一般に，任意の実数値$x$（刺激レベル）に対して$(0,1)$の数値$y$（反応率）を出力する関数を出力するようなものであった．
+        さらに，反応したかどうかを表す確率変数$Y$を導入することで，要因$x$と反応確率$\pi(=P(Y=1|x))$をロジスティックモデルでモデル化するのであった．
+    \end{review}
+\end{frame}
+
+\begin{frame}
+    \frametitle{非線形ロジスティック判別}
+    非線形ロジスティック回帰では多項式モデルやB-スプラインを用いることができるのであった．今回は具体的な基底関数として
+    ガウス型基底関数に基づく非線形ロジスティック判別を見てみる．
+    \begin{review}[2次元ガウス関数]
+        \begin{align*}
+            b_j(\boldsymbol{x}) & =\phi_j(x_1,x_2)                                                                          \\
+                                & =\exp\left\{-\frac{(x_1-\mu_{j1}^2)+(x_2-\mu_{j2}^2)}{2h_j^2}\right\}, \; j=1,2,\cdots ,m
+        \end{align*}
+        $m$は基底関数の個数，$\boldsymbol{\mu}=(\mu_1,\mu_2)^T$は基底関数の位置を定める中心ベクトル，$h_j^2$は関数の広がりを表す量
+    \end{review}
+\end{frame}
+\begin{frame}
+    \frametitle{非線形ロジスティック判別}
+    図の2群を判別するような判別関数$h(x_1,x_2)$は，最尤法によって推定した係数ベクトルを重みとする次の式で表す．
+
+    \begin{align*}
+        h(x_1,x_2)=\hat{w}_0+\sum_{j=1}^{m}\hat{w}_j\phi_j(x_1,x_2)=0 \\
+        \because \log \frac{P(G_1|\boldsymbol{x})}{1-P(G_1|\boldsymbol{x})}=\hat{\boldsymbol{w}}\boldsymbol{b}(\boldsymbol{x})
+        \begin{cases}
+            \leq 0 \Rightarrow G_1 \\
+            > 0 \Rightarrow G_2
+        \end{cases}
+    \end{align*}
+\end{frame}
+
+\begin{frame}
+    \frametitle{非線形ロジスティック判別}
+    \begin{itemize}
+        \item 非線形ロジスティック判別法は文字認識や音声認識，画像認識などパターン認識の分析法として有効．
+        \item 高次元データに対して最尤法がモデルの推定に有効に機能しない場合がある．
+        \item そのような場合は正則化最尤法が有効．適切に正則化パラメータを選び非線形判別関数を構成．
+    \end{itemize}
+\end{frame}
+\end{document}
