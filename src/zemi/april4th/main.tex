@@ -195,5 +195,51 @@
                                 (0,\cdots ,0)                           & \text{if $\boldsymbol{x}_i \in G_L$}
                             \end{cases}
     \end{align*}
+    $i$番目のデータが第$k$群($k\neq L$)から観測されたなら第$k$成分のみ$1$でその他の成分は$0$の$(L-1)$次元ベクトル，
+    第$L$群からならすべての成分が$0$の$(L-1)$次元ベクトルに対応させる．
+\end{frame}
+\begin{frame}
+    \frametitle{多群の非線形判別}
+    2スライド前の結果から，事後確率は基底関数の係数ベクトル（重みベクトル）に依存する．\\
+    学習するデータから推定するパラメータを$\boldsymbol{w}=\left\{\boldsymbol{w}_1,\boldsymbol{w}_2,\cdots ,\boldsymbol{w}_{L-1}\right\}$
+    として$P(G_k|\boldsymbol{x}_i)=\pi_k(\boldsymbol{x}_i;\boldsymbol{w})$と表す．\\
+    ２群のラベル変数はベルヌーイ分布に従ったのであった．\\
+    多群の$(L-1)$次元ラベル変数ベクトル$\boldsymbol{y}_i$は多項分布に従う．
+    \begin{align*}
+        f(\boldsymbol{y}_i|\boldsymbol{x}_i;\boldsymbol{w})=\prod_{k=1}^{L-1}\pi_k(\boldsymbol{x}_i;\boldsymbol{w})^{y_{ik}}\pi_L(\boldsymbol{x}_i;\boldsymbol{w})^{1-\sum\limits_{g=1}^{L-1}y_{ig}}
+    \end{align*}
+\end{frame}
+\begin{frame}
+    \frametitle{多群の非線形判別}
+    例えば$x_i \in G_j,\, j \neq L$のとき，$\boldsymbol{y}_i=(0,\cdots,0,\overset{j}{1},0,\cdots ,0)$\\
+    よって
+    \begin{align*}
+        f(\boldsymbol{y}_i|\boldsymbol{x}_i;\boldsymbol{w})=\pi_j(\boldsymbol{x}_i;\boldsymbol{w})
+    \end{align*}
+    $1-\sum\limits_{g=1}^{L-1}y_{ig}$が$0$になるのが効いている．\\
+    $x_i \in G_L$なら
+    \begin{align*}
+        f(\boldsymbol{y}_i|\boldsymbol{x}_i;\boldsymbol{w})=\pi_L(\boldsymbol{x}_i;\boldsymbol{w})
+    \end{align*}
+    $y_{ik}$が$0$になるのが効いている．\\
+    確かに$\boldsymbol{y}_i$は前スライドで示した多項分布に従う．
+\end{frame}
+\begin{frame}
+    \frametitle{多群の非線形判別}
+    対数尤度関数は
+    \begin{align*}
+        \ell (\boldsymbol{w}) & =\log\left[ \prod_{i=2}^{n} \prod_{k=1}^{L-1}\pi_k(\boldsymbol{x}_i;\boldsymbol{w})^{y_{ik}}\pi_L(\boldsymbol{x}_i;\boldsymbol{w})^{1-\sum\limits_{g=1}^{L-1}y_{ig}}\right] \\
+                              & =\sum_{i=1}^{n}\log \left[\prod_{k=1}^{L-1}\pi_k(\boldsymbol{x}_i;\boldsymbol{w})^{y_{ik}}\pi_L(\boldsymbol{x}_i;\boldsymbol{w})^{1-\sum\limits_{g=1}^{L-1}y_{ig}}  \right] \\
+                              & =\sum_{i=1}^{n}\left[\sum_{k=1}^{L-1}y_{ik}\log \pi_k(\boldsymbol{x}_i;\boldsymbol{w})+(1-\sum_{g=1}^{L-1}y_{ig})\log \pi_L(\boldsymbol{x}_i;\boldsymbol{w})\right]
+    \end{align*}
+    (後半$k$は効いていない)
+\end{frame}
+\begin{frame}
+    \frametitle{多群の非線形判別}
+    ただし，
+    \begin{align*}
+        \pi_k(\boldsymbol{x}_i;\boldsymbol{w}) & =\frac{\exp\left\{\boldsymbol{w}_k^T\boldsymbol{b}(\boldsymbol{x}_i)\right\}}{1+\sum\limits_{g=1}^{L-1}\exp\left\{\boldsymbol{w}_g^T\boldsymbol{b}(\boldsymbol{x}_i)\right\}}, \: k=1,2,\cdots,L-1 \\
+        \pi_L(\boldsymbol{x}_i;\boldsymbol{w}) & =\frac{1}{1+\sum\limits_{g=1}^{L-1}\exp\left\{\boldsymbol{w}_g^T\boldsymbol{b}(\boldsymbol{x}_i)\right\}}
+    \end{align*}
 \end{frame}
 \end{document}
