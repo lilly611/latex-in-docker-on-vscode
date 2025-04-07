@@ -2,7 +2,10 @@
 \documentclass[dvipdfmx,cjk]{beamer}
 %\documentclass[dvipdfm,cjk]{beamer} % オプションは環境や利用するプログラムによって変える
 %\documentclass[dvips,cjk]{beamer}
-
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{latexsym}
 % しおり（PDF にしたときの目次）の文字化け防止
 \AtBeginDvi{\special{pdf:tounicode 90ms-RKSJ-UCS2}}
 %\AtBeginDvi{\special{pdf:tounicode EUC-UCS2}}
@@ -141,9 +144,56 @@
     \end{itemize}
 \end{frame}
 \begin{frame}
-    \frametitle{他群の非線形判別}
+    \frametitle{多群の非線形判別}
     \begin{itemize}
         \item ３群以上の複数の群から観測された学習データから非線形判別法を構成する．
+        \item $L$個の群$G_1,G_2,\cdots , G_L$があるとする．
+        \item これらから，$n$個の$p$次元データ$\left\{\boldsymbol{x}_1,\boldsymbol{x}_2,\cdots,\boldsymbol{x}_n\right\}$
+              が学習データとして観測されたとする．
+        \item 新たなデータ$\boldsymbol{x}$が$L$個の群のいずれかから観測されたとき，それが第$k$群からのものであるという事後確率を次で定める．
     \end{itemize}
+    \begin{align*}
+        P(G_k|\boldsymbol{x}), \; K=1,2,\cdots ,L
+    \end{align*}
+
+\end{frame}
+\begin{frame}
+    \frametitle{多群の非線形判別}
+    \begin{itemize}
+        \item 2群の場合を拡張して非線形判別法を構成する．
+        \item 群$G_k \hspace{5mm} (k=1,2,\cdots ,L-1)$と第$L$番目の群$G_L$との間の$L-1$個の事後確率の比を考えると
+    \end{itemize}
+    \begin{align*}
+         & \log \left\{\frac{P(G_k|\boldsymbol{x})}{P(G_L|\boldsymbol{x})}\right\} =\sum_{j=0}^{m} w_{kj}b_j(\boldsymbol{x})=\boldsymbol{w}_k^T\boldsymbol{b}(\boldsymbol{x}), \; k=1,2,\cdots , L-1 \\
+         & \text{ただし}\boldsymbol{w}_k=(w_{k0},w_{k1},\cdots ,w_{km})^T
+    \end{align*}
+    変形すると
+    \begin{align*}
+        P(G_k|\boldsymbol{x})=\exp\left\{\boldsymbol{w}_k^T\boldsymbol{b}(\boldsymbol{x})\right\}P(G_L|\boldsymbol{x}) \tag{A}
+    \end{align*}
+\end{frame}
+\begin{frame}
+    \frametitle{多群の非線形判別}
+
+    ここで，
+    \begin{align*}
+        P(G_L|\boldsymbol{x}) & =1-\sum\limits_{g=1}^{L-1}P(G_g|\boldsymbol{x})=1-\sum\limits_{g=1}^{L-1}\exp\left\{\boldsymbol{w}_g^T\boldsymbol{b}(\boldsymbol{x})\right\}P(G_L|\boldsymbol{x}) \\
+                              & \therefore P(G_L|\boldsymbol{x})=\frac{1}{1+\sum\limits_{g=1}^{L-1}\exp\left\{\boldsymbol{w}_g^T\boldsymbol{b}(\boldsymbol{x})\right\}}
+    \end{align*}
+    Aに代入して
+    \begin{align*}
+        P(G_k|\boldsymbol{x})=\frac{\exp\left\{\boldsymbol{w}_k^T\boldsymbol{b}(\boldsymbol{x})\right\}}{1+\sum\limits_{g=1}^{L-1}\exp\left\{\boldsymbol{w}_g^T\boldsymbol{b}(\boldsymbol{x})\right\}}
+    \end{align*}
+\end{frame}
+\begin{frame}
+    \frametitle{多群の非線形判別}
+    さらに，各データ$\boldsymbol{x}_i$に対して群の所属を表すラベル変数ベクトル$\boldsymbol{y}_i$を次のように決める．
+    \begin{align*}
+        \boldsymbol{y}_i & =(y_{i1},y_{i2},\cdots ,y_{i(L-1)})^T                                                                        \\
+                         & =\begin{cases}
+                                (0,\cdots,0,\overset{k}{1},0,\cdots ,0) & \text{if $\boldsymbol{x}_i \in G_k$,\: $k=1,\cdots ,L-1$} \\
+                                (0,\cdots ,0)                           & \text{if $\boldsymbol{x}_i \in G_L$}
+                            \end{cases}
+    \end{align*}
 \end{frame}
 \end{document}
