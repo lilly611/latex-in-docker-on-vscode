@@ -6,6 +6,7 @@
 \usepackage{amssymb}
 \usepackage{amsfonts}
 \usepackage{latexsym}
+\usepackage{ulem}
 % しおり（PDF にしたときの目次）の文字化け防止
 \AtBeginDvi{\special{pdf:tounicode 90ms-RKSJ-UCS2}}
 %\AtBeginDvi{\special{pdf:tounicode EUC-UCS2}}
@@ -247,7 +248,7 @@
     $\boldsymbol{w}=\left\{\boldsymbol{w}_1,\boldsymbol{w}_2,\cdots ,\boldsymbol{w}_{L-1}\right\}$の最尤推定値は対数尤度関数の最大化によって得られるが，解析的に陽に求めることは難しいため，ニュートン・ラフソン法などの数値最適化法を用いて推定する．
     \begin{align*}
         \frac{\partial \ell(\boldsymbol{w})}{\partial \boldsymbol{w}}=(\frac{\partial \ell(\boldsymbol{w})}{\partial \boldsymbol{w}_1},\cdots , \frac{\partial \ell(\boldsymbol{w})}{\partial \boldsymbol{w}_{L-1}})^T=\boldsymbol{0} \\
-        \frac{\partial \ell(\boldsymbol{w})}{\partial \boldsymbol{w}_p}=(\frac{\partial \ell(\boldsymbol{w})}{\partial w_{p1}},\cdots ,\frac{\partial \ell(\boldsymbol{w})}{\partial w_{pj}})^T=\boldsymbol{0}
+        %\frac{\partial \ell(\boldsymbol{w})}{\partial \boldsymbol{w}_p}=(\frac{\partial \ell(\boldsymbol{w})}{\partial w_{p1}},\cdots ,\frac{\partial \ell(\boldsymbol{w})}{\partial w_{pj}})^T=\boldsymbol{0}
     \end{align*}
 \end{frame}
 
@@ -255,21 +256,29 @@
     \frametitle{多群の非線形判別}
     （偏微分を計算するために次の式を考える）ここで，
     \begin{align*}
-        \log \pi_k(\boldsymbol{x}_i;\boldsymbol{w})                                  & =\boldsymbol{w}_k^T\boldsymbol{b}(\boldsymbol{x_i})-\log(1+\sum\limits_{g=1}^{L-1}\exp\left\{\boldsymbol{w}_g^T\boldsymbol{b}(\boldsymbol{x}_i)\right\}) \\
-        \frac{\partial}{\partial w_{pq}} \log \pi_k(\boldsymbol{x}_i;\boldsymbol{w}) & =b_i(\boldsymbol{x}_i)-\frac{1}{1+\sum\limits_{g=1}^{L-1}\exp\left\{\boldsymbol{w}_g^T\boldsymbol{b}(\boldsymbol{x}_i)\right\}}                          \\
-                                                                                     & \frac{\partial}{\partial w_{pq}}\left\{1+\sum\limits_{g=1}^{L-1}\exp\left\{\boldsymbol{w}_g^T\boldsymbol{b}(\boldsymbol{x}_i)\right\})\right\}\tag{B}
+        \log \pi_k(\boldsymbol{x}_i;\boldsymbol{w})                                            & =\boldsymbol{w}_k^T\boldsymbol{b}(\boldsymbol{x_i})-\log(1+\sum\limits_{g=1}^{L-1}\exp\left\{\boldsymbol{w}_g^T\boldsymbol{b}(\boldsymbol{x}_i)\right\})                                               \\
+        \frac{\partial}{\partial \boldsymbol{w}_p} \log \pi_k(\boldsymbol{x}_i;\boldsymbol{w}) & =\frac{\partial}{\partial \boldsymbol{w}_p}\boldsymbol{w}_k^T\boldsymbol{b}(\boldsymbol{x}_i)-\frac{1}{1+\sum\limits_{g=1}^{L-1}\exp\left\{\boldsymbol{w}_g^T\boldsymbol{b}(\boldsymbol{x}_i)\right\}} \\
+                                                                                               & \frac{\partial}{\partial \boldsymbol{w}_p}\left\{1+\sum\limits_{g=1}^{L-1}\exp\left\{\boldsymbol{w}_g^T\boldsymbol{b}(\boldsymbol{x}_i)\right\})\right\}\tag{B}
     \end{align*}
 \end{frame}
 
 \begin{frame}
     \frametitle{多群の非線形判別}
-    もし$g\neq p$なら
+    右辺第１項について
     \begin{align*}
-        \frac{\partial}{\partial w_{pq}}\exp\left\{\boldsymbol{w}_g^T\boldsymbol{b}(\boldsymbol{x}_i)\right\}=0
+        \frac{\partial}{\partial \boldsymbol{w}_p}\boldsymbol{w}_k^T\boldsymbol{b}(\boldsymbol{x}_i)=
+        \begin{cases}
+            \boldsymbol{b}(\boldsymbol{x}_i)\; & \text{if $k=p$}     \\
+            \boldsymbol{0}\;                   & \text{if $k\neq p$}
+        \end{cases}
+    \end{align*}
+    右辺第２項について，もし$g\neq p$なら
+    \begin{align*}
+        \frac{\partial}{\partial \boldsymbol{w}_p}\exp\left\{\boldsymbol{w}_g^T\boldsymbol{b}(\boldsymbol{x}_i)\right\}=0
     \end{align*}
     $g=p$なら
     \begin{align*}
-        \frac{\partial}{\partial w_{pq}}\exp\left\{\boldsymbol{w}_g^T\boldsymbol{b}(\boldsymbol{x}_i)\right\}=\exp \left\{\boldsymbol{w}_g^T\boldsymbol{b}(\boldsymbol{x}_i)\right\}b_q(\boldsymbol{x}_i)
+        \frac{\partial}{\partial \boldsymbol{w}_p}\exp\left\{\boldsymbol{w}_g^T\boldsymbol{b}(\boldsymbol{x}_i)\right\}=\exp \left\{\boldsymbol{w}_g^T\boldsymbol{b}(\boldsymbol{x}_i)\right\}\boldsymbol{b}(\boldsymbol{x}_i)
     \end{align*}
 \end{frame}
 
@@ -277,16 +286,20 @@
     \frametitle{多群の非線形判別}
     よって
     \begin{align*}
-        (B)=\left\{1-\pi_k(\boldsymbol{x}_i;\boldsymbol{w})\right\}b_q(\boldsymbol{x}_i)
+        (B)=
+        \begin{cases}
+            \left\{1-\pi_k(\boldsymbol{x}_i;\boldsymbol{w})\right\}\boldsymbol{b}(\boldsymbol{x}_i)\; & \text{if $k=q$}      \\
+            -\pi_k(\boldsymbol{x}_i;\boldsymbol{w})\boldsymbol{b}(\boldsymbol{x}_i)\;                 & \text{if $k \neq q$}
+        \end{cases}
     \end{align*}
-    同様の議論により
+    前スライド右辺第２項の議論と同様にすれば
     \begin{align*}
-        \frac{\partial}{\partial w_{ki}}\log \pi_L(\boldsymbol{x}_i;\boldsymbol{w})=-\pi_k(\boldsymbol{x}_i;\boldsymbol{w})b_q(\boldsymbol{x}_i)
+        \frac{\partial}{\partial \boldsymbol{w}_p}\log \pi_L(\boldsymbol{x}_i;\boldsymbol{w})=-\pi_p(\boldsymbol{x}_i;\boldsymbol{w})\boldsymbol{b}(\boldsymbol{x}_i)
     \end{align*}
-    $\ell(\boldsymbol{w})$を$w_{pq}$で偏微分した時の$\left[\,\right]$の中を計算する．$i$を固定して
+    $\ell(\boldsymbol{w})$を$\boldsymbol{w}_p$で偏微分した時の$\left[\,\right]$の中を計算する．$i$を固定して
     \begin{align*}
-         & \sum_{k=1}^{L-1}y_{ik}\left\{1-\pi_k(\boldsymbol{x}_i;\boldsymbol{w})\right\}b_q(\boldsymbol{x}_i)+(1-\sum_{g=1}^{L-1}y_{ig})\left\{-\pi_k(\boldsymbol{x}_i;\boldsymbol{w})b_q(\boldsymbol{x}_i)\right\}   \\
-         & =\sum_{k=1}^{L-1}y_{ik}b_q(\boldsymbol{x}_i)-\pi_k(\boldsymbol{x}_i;\boldsymbol{w})b_i(\boldsymbol{x}_i)=\sum_{k=1}^{L-1}\left\{y_{ik}-\pi_k(\boldsymbol{x}_i;\boldsymbol{w})\right\}b_q(\boldsymbol{x}_i)
+         & y_{ip}\boldsymbol{b}(\boldsymbol{x}_i)+\sum_{k=1}^{L-1}y_{ik}\left\{-\pi_k(\boldsymbol{x}_i;\boldsymbol{w})\right\}\boldsymbol{b}(\boldsymbol{x}_i)+(1-\sum_{g=1}^{L-1}y_{ig})\left\{-\pi_k(\boldsymbol{x}_i;\boldsymbol{w})\boldsymbol{b}(\boldsymbol{x}_i)\right\} \\
+         & =\left\{y_{ip}-\pi_k(\boldsymbol{x}_i;\boldsymbol{w})\right\}\boldsymbol{b}(\boldsymbol{x}_i)
     \end{align*}
 \end{frame}
 
@@ -294,7 +307,55 @@
     \frametitle{多群の非線形判別}
     以上より
     \begin{align*}
-        \frac{\partial \ell(\boldsymbol{w})}{\partial w_{ki}}=\sum_{i=1}^{n}
+        \frac{\partial \ell(\boldsymbol{w})}{\partial \boldsymbol{w}_p}=\sum_{i=1}^{n}\left\{y_{ip}-\pi_p(\boldsymbol{x}_i;\boldsymbol{w})\right\}\boldsymbol{b}(\boldsymbol{x}_i)
     \end{align*}
+    （教科書では$G_k$と総和の添字が競合している？大変でした）\\
+    ニュートン・ラフソン法など数値的最適化を用いるために必要な２階微分も計算してみる．
+\end{frame}
+
+\begin{frame}
+    \frametitle{多群の非線形判別}
+    \begin{align*}
+        \frac{\partial \ell(\boldsymbol{w})}{\partial \boldsymbol{w}_p \partial \boldsymbol{w}_q^T}=-\sum_{i=1}^{n}\frac{\partial}{\partial \boldsymbol{w}_q^T}\pi_p(\boldsymbol{x}_i;\boldsymbol{w})\boldsymbol{b}(\boldsymbol{x}_i)
+    \end{align*}
+    ここで
+    \begin{align*}
+        \frac{\partial}{\partial \boldsymbol{w}_q^T}\pi_p(\boldsymbol{x}_i;\boldsymbol{w})\boldsymbol{b}(\boldsymbol{x}_i) & =\frac{\partial}{\partial \boldsymbol{w}_q^T}\frac{\exp\left\{\boldsymbol{w}_p^T\boldsymbol{b}(\boldsymbol{x}_i)\right\}\boldsymbol{b}(\boldsymbol{x}_i)}{1+\sum\limits_{g=1}^{L-1}\exp\left\{\boldsymbol{w}_g^T\boldsymbol{b}(\boldsymbol{x}_i)\right\}}
+    \end{align*}
+\end{frame}
+
+\begin{frame}
+    \frametitle{多群の非線形判別}
+    $q=p$ならば
+    \begin{align*}
+        \frac{\exp\left\{\boldsymbol{w}_p^T\boldsymbol{b}(\boldsymbol{x}_i)\right\}\boldsymbol{b}(\boldsymbol{x}_i)\boldsymbol{b}(\boldsymbol{x}_i)^T\left[1+\sum\limits_{g=1}^{L-1}\exp\left\{\boldsymbol{w}_g^T\boldsymbol{b}(\boldsymbol{x}_i)\right\}\right]}{\left[1+\sum\limits_{g=1}^{L-1}\exp\left\{\boldsymbol{w}_g^T\boldsymbol{b}(\boldsymbol{x}_i)\right\}\right]^2} \\
+        -\frac{\exp\left\{\boldsymbol{w}_p^T\boldsymbol{b}(\boldsymbol{x}_i)\right\}\boldsymbol{b}(\boldsymbol{x}_i)\exp\left\{\boldsymbol{w}_p^T\boldsymbol{b}(\boldsymbol{x}_i)\right\}\boldsymbol{b}(\boldsymbol{x}_i)^T}{\left[1+\sum\limits_{g=1}^{L-1}\exp\left\{\boldsymbol{w}_g^T\boldsymbol{b}(\boldsymbol{x}_i)\right\}\right]^2}
+    \end{align*}
+\end{frame}
+
+\begin{frame}
+    \frametitle{多群の非線形判別}
+    \begin{align*}
+         & =\pi_p(\boldsymbol{x}_i;\boldsymbol{w})\boldsymbol{b}(\boldsymbol{x}_i)\boldsymbol{b}(\boldsymbol{x}_i)^T-\pi_p(\boldsymbol{x}_i;\boldsymbol{w})^2\boldsymbol{b}(\boldsymbol{x}_i)\boldsymbol{b}(\boldsymbol{x}_i)^T \\
+         & =\pi_p(\boldsymbol{x}_i;\boldsymbol{w})\left\{1-\pi_p(\boldsymbol{x}_i;\boldsymbol{w})\right\}\boldsymbol{b}(\boldsymbol{x}_i)\boldsymbol{b}(\boldsymbol{x}_i)^T
+    \end{align*}
+    $q\neq p$ならば
+    \begin{align*}
+         & -\frac{\exp\left\{\boldsymbol{w}_p^T\boldsymbol{b}(\boldsymbol{x}_i)\right\}\boldsymbol{b}(\boldsymbol{x}_i)\exp\left\{\boldsymbol{w}_q^T\boldsymbol{b}(\boldsymbol{x}_i)\right\}\boldsymbol{b}(\boldsymbol{x}_i)^T}{\left[1+\sum\limits_{g=1}^{L-1}\exp\left\{\boldsymbol{w}_g^T\boldsymbol{b}(\boldsymbol{x}_i)\right\}\right]^2} \\
+         & =-\pi_p(\boldsymbol{x}_i;\boldsymbol{w})\pi_q(\boldsymbol{x}_i;\boldsymbol{w})\boldsymbol{b}(\boldsymbol{x}_i)\boldsymbol{b}(\boldsymbol{x}_i)^T
+    \end{align*}
+\end{frame}
+
+\begin{frame}
+    \frametitle{多群の非線形判別}
+    以上より
+    \begin{align*}
+        \frac{\partial \ell(\boldsymbol{w})}{\partial \boldsymbol{w}_p \partial \boldsymbol{w}_q^T}=
+        \begin{cases}
+            -\sum\limits_{i=1}^{n}\pi_p(\boldsymbol{x}_i;\boldsymbol{w})\left\{1-\pi_p(\boldsymbol{x}_i;\boldsymbol{w})\right\}\boldsymbol{b}(\boldsymbol{x}_i)\boldsymbol{b}(\boldsymbol{x}_i)^T\; & \text{if $p=q$}     \\
+            \sum\limits_{i=1}^{n}\pi_p(\boldsymbol{x}_i;\boldsymbol{w})\pi_q(\boldsymbol{x}_i;\boldsymbol{w})\boldsymbol{b}(\boldsymbol{x}_i)\boldsymbol{b}(\boldsymbol{x}_i)^T\;                   & \text{if $p\neq q$}
+        \end{cases}
+    \end{align*}
+    ２階微分を用いて数値的最適化によって基底関数の係数ベクトルを推定し，データ$\boldsymbol{x}$の各群へ属する事後確率を計算する．$L$個の事後確率を比較して最大となる群に属すると判断する．
 \end{frame}
 \end{document}
