@@ -256,7 +256,7 @@
     （偏微分を計算するために次の式を考える）ここで，
     \begin{align*}
         \log \pi_k(\boldsymbol{x}_i;\boldsymbol{w})                                  & =\boldsymbol{w}_k^T\boldsymbol{b}(\boldsymbol{x_i})-\log(1+\sum\limits_{g=1}^{L-1}\exp\left\{\boldsymbol{w}_g^T\boldsymbol{b}(\boldsymbol{x}_i)\right\}) \\
-        \frac{\partial \log \pi_k(\boldsymbol{x}_i;\boldsymbol{w})}{\partial w_{ki}} & =b_i(\boldsymbol{x}_i)-\frac{1}{1+\sum\limits_{g=1}^{L-1}\exp\left\{\boldsymbol{w}_g^T\boldsymbol{b}(\boldsymbol{x}_i)\right\}}                          \\
+        \frac{\partial}{\partial w_{ki}} \log \pi_k(\boldsymbol{x}_i;\boldsymbol{w}) & =b_i(\boldsymbol{x}_i)-\frac{1}{1+\sum\limits_{g=1}^{L-1}\exp\left\{\boldsymbol{w}_g^T\boldsymbol{b}(\boldsymbol{x}_i)\right\}}                          \\
                                                                                      & \frac{\partial}{\partial w_{ki}}\left\{1+\sum\limits_{g=1}^{L-1}\exp\left\{\boldsymbol{w}_g^T\boldsymbol{b}(\boldsymbol{x}_i)\right\})\right\}\tag{B}
     \end{align*}
 \end{frame}
@@ -281,7 +281,12 @@
     \end{align*}
     同様の議論により
     \begin{align*}
-        \frac{\partial}{\partial w_{ki}}\log \pi_l(\boldsymbol{x}_i;\boldsymbol{w})=
+        \frac{\partial}{\partial w_{ki}}\log \pi_L(\boldsymbol{x}_i;\boldsymbol{w})=-\pi_k(\boldsymbol{x}_i;\boldsymbol{w})b_i(\boldsymbol{x}_i)
+    \end{align*}
+    $\ell(\boldsymbol{w})$を$w_{ik}$で偏微分した時の$\left[\,\right]$の中を計算する．$i$を固定して
+    \begin{align*}
+         & \sum_{k=1}^{L-1}y_{ik}\left\{1-\pi_k(\boldsymbol{x}_i;\boldsymbol{w})\right\}b_i(\boldsymbol{x}_i)+(1-\sum_{g=1}^{L-1}y_{ig})\left\{-\pi_k(\boldsymbol{x}_i;\boldsymbol{w})b_i(\boldsymbol{x}_i)\right\} \\
+         & =\sum_{k=1}^{L-1}y_{ik}b_i(\boldsymbol{x}_i)-\pi_k(\boldsymbol{x}_i;\boldsymbol{w})b_i(\boldsymbol{x}_i)=
     \end{align*}
 \end{frame}
 \end{document}
