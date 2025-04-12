@@ -1,0 +1,50 @@
+\documentclass[a4j,uplatex]{jsarticle}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\theoremstyle{definition}
+\newtheorem{dfn}{Definition}[section]
+\newtheorem*{df*}{Definition}
+\newtheorem{prop}[dfn]{Proposition}
+\newtheorem{lem}[dfn]{Lemma}
+\newtheorem{thm}[dfn]{Theorem}
+\newtheorem{cor}[dfn]{Corollary}
+\newtheorem{rem}[dfn]{Remark}
+\newtheorem{fact}[dfn]{Fact}
+
+\title{院試過去問でわからなかったところの教科書まとめ}
+\author{照屋佑喜仁\thanks{参考：斎藤微積}}
+
+\begin{document}
+\maketitle
+院試に向けて自分用まとめ　順番は適当
+\tableofcontents
+
+\section{積分}
+\subsection{テクニック}
+\begin{rem}[$\cos^2x$などの積分]
+    三角関数の累乗の積分は2倍角などで次数を下げるとうまくいくことがある．
+\end{rem}
+\subsection{面積・長さ}
+\subsubsection{極座標}
+\begin{df*}[曲領域の面積]
+    極座標で$r=f(\theta)$なる曲線と2直線$\theta=a,\theta=b(a<b)$とで囲まれる領域を\emph{曲領域}という．\\
+    その面積$S$を
+    \begin{align*}
+        S=\frac{1}{2}\int_{a}^{b}r^2d\theta=\frac{1}{2}\int_{a}^{b}f(\theta)^2d\theta
+    \end{align*}
+\end{df*}
+
+\subsubsection{長さ}
+\begin{df*}
+    閉曲線$C$
+    \begin{align*}
+        x=x(t),\: y=y(t) \quad \alpha \leq t \leq \beta
+    \end{align*}
+    の長さ$\ell(C)$は次で定める
+    \begin{align*}
+        \ell(C)=\int_{\alpha}^{\beta}\sqrt{\left(\frac{dx(t)}{dt}\right)^2+\left(\frac{dy(t)}{dt}\right)^2}dt
+    \end{align*}
+\end{df*}
+\end{document}
