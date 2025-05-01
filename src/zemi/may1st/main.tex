@@ -173,7 +173,7 @@
     \end{align*}
     よって(2)は次のように表される．
     \begin{align*}
-        K_c^2\boldsymbol{w}_\alpha^F=n\lambda_\alpha^F\boldsymbol{w}_\alpha^F
+        K_c^2\boldsymbol{c}_\alpha^F=n\lambda_\alpha^F\boldsymbol{c}_\alpha^F
     \end{align*}
 \end{frame}
 \begin{frame}
@@ -183,5 +183,120 @@
         K_c\boldsymbol{c}_\alpha^F=n\lambda_\alpha^F\boldsymbol{c}_\alpha^F
     \end{align*}
     求めた固有ベクトル$\boldsymbol{c}_\alpha^F$を(3)へ代入すると
+    \begin{align*}
+        \boldsymbol{w}_\alpha^F=Z_c^T\boldsymbol{c}_\alpha^F=\sum_{i=1}^{n}c_{i\alpha}^F\boldsymbol{\Phi}_c(\boldsymbol{x}_i)
+    \end{align*}
+    を得る．ただし行列$K_c$の固有ベクトルは次の条件を満たす．
+    \begin{align*}
+        1 & ={\boldsymbol{w}_\alpha^F}^T\boldsymbol{w}_\alpha^F\quad \because\text{$\boldsymbol{w}_\alpha^F$は正規化済}                                                                                                                                             \\
+          & =(Z_c^T\boldsymbol{c}_\alpha^F)^T(Z_c^T\boldsymbol{c}_\alpha^F)={\boldsymbol{c}_\alpha^F}^TZ_cZ_c^T\boldsymbol{c}_\alpha^F={\boldsymbol{c}_\alpha^F}^TK\boldsymbol{c}_\alpha^F=n\lambda_\alpha^F{\boldsymbol{c}_\alpha^F}^T\boldsymbol{c}_\alpha^F
+    \end{align*}
+\end{frame}
+\begin{frame}
+    \frametitle{高次元空間への写像}
+    以上より，特徴空間上の中心化されたデータに基づいて構成した第$\alpha$番目の主成分は
+    \begin{align*}
+        y_\alpha^F={\boldsymbol{w}_\alpha^F}^T\boldsymbol{\Phi}_c(\boldsymbol{x})=\sum_{i=1}^{n}c_{i\alpha}^F{\boldsymbol{\Phi}_c(\boldsymbol{x})}^T\boldsymbol{\Phi}_c(\boldsymbol{x})
+    \end{align*}
+    で与えられる．\vskip.5\baselineskip
+    入力空間の次元が高いと極めて高次元の特徴空間へとデータを写像する必要があり，これによってデータ間の内積${\boldsymbol{\Phi}_c(\boldsymbol{x})}^T\boldsymbol{\Phi}_c(\boldsymbol{x})$の計算が困難となる．\\
+    このような状況に対処するために有用なのがカーネル法である．
+\end{frame}
+\section{カーネル法}
+\begin{frame}
+    \frametitle{カーネル法}
+    先程述べたように，高次元ベクトル間の内積の計算の問題がある．これを次のようにカーネル関数で置き換えることで克服する．
+    \begin{align*}
+        K_c(\boldsymbol{x}_j,\boldsymbol{x}_k)={\boldsymbol{\Phi}_c(\boldsymbol{x}_j)}^T\boldsymbol{\Phi}_c(\boldsymbol{x}_k)
+    \end{align*}
+    右辺の値を，計算可能な左辺のカーネル関数の値として求めているといえる．例えば，代表的なカーネル関数であるガウスカーネルを用いると
+    \begin{align*}
+        K_c(\boldsymbol{x}_j,\boldsymbol{x}_k)=\exp\left\{-\frac{{||\boldsymbol{x}_j-\boldsymbol{x}_k||}^2}{2\sigma^2}\right\}={\boldsymbol{\Phi}_c(\boldsymbol{x}_j)}^T\boldsymbol{\Phi}_c(\boldsymbol{x}_k)\tag{4}
+    \end{align*}
+    と表される．右辺の内積の計算の計算は極度の高次元化により困難であっても，左辺の計算は入力空間上の$p$次元データの内積に基づく計算であるから用意に求まることがわかる.
+\end{frame}
+\begin{frame}
+    \frametitle{カーネル法}
+    $K_c$は,計算可能なカーネル関数を成分とする行列で表すことができる.
+    \begin{align*}
+        K_c & \equiv Z_cZ_c^T                                                                                                                    \\
+            & =\begin{pmatrix}
+                   K_c(\boldsymbol{x}_1,\boldsymbol{x}_1) & K_c(\boldsymbol{x}_1,\boldsymbol{x}_2) & \dots  & K_c(\boldsymbol{x}_1,\boldsymbol{x}_n) \\
+                   K_c(\boldsymbol{x}_2,\boldsymbol{x}_1) & K_c(\boldsymbol{x}_2,\boldsymbol{x}_2) & \dots  & K_c(\boldsymbol{x}_2,\boldsymbol{x}_n) \\
+                   \vdots                                 & \vdots                                 & \ddots & \vdots                                 \\
+                   K_c(\boldsymbol{x}_n,\boldsymbol{x}_1) & K_c(\boldsymbol{x}_n,\boldsymbol{x}_2) & \dots  & K_c(\boldsymbol{x}_n,\boldsymbol{x}_n)
+               \end{pmatrix}
+    \end{align*}
+    同様に,第$\alpha$番目の主成分も
+    \begin{align*}
+        y_\alpha^F={\boldsymbol{w}_\alpha^F}^T\boldsymbol{\Phi}_c(\boldsymbol{x})=\sum_{i=1}^{n}c_{i\alpha}^F{\boldsymbol{\Phi}_c(\boldsymbol{x})}^T\boldsymbol{\Phi}_c(\boldsymbol{x})=\sum_{i=1}^{n}c_{i\alpha}^FK_c(\boldsymbol{x}_i,\boldsymbol{x})
+    \end{align*}
+    と表せる.
+\end{frame}
+\begin{frame}
+    \frametitle{カーネル法}
+    データの中心化の過程で必要となる標本平均ベクトル$\overline{\boldsymbol{\Phi}}$をどのように計算するかという問題がある.（？）この問題を避けるためには,高次元特徴空間へ変換した$r$次元データ$\boldsymbol{\Phi}(\boldsymbol{x}_1),\boldsymbol{\Phi}(\boldsymbol{x}_2),\dots,\boldsymbol{\Phi}(\boldsymbol{x}_n)$の内積をカーネル関数で置き換えた式
+    \begin{align*}
+        K(\boldsymbol{x}_j,\boldsymbol{x}_k)={\boldsymbol{\Phi}(\boldsymbol{x}_j)}\boldsymbol{\Phi}(\boldsymbol{x}_k)\tag{5}
+    \end{align*}
+    を用いて(4)の中心化したデータに対するカーネル関数を表す必要がある.
+\end{frame}
+\begin{frame}
+    \frametitle{カーネル法}
+    \begin{align*}
+        K_c(\boldsymbol{x}_j,\boldsymbol{x}_k) & ={\boldsymbol{\Phi}_c(\boldsymbol{x}_j)}^T\boldsymbol{\Phi}_c(\boldsymbol{x}_k)                                                                                                                                                       \\
+                                               & =\left(\boldsymbol{\Phi}(\boldsymbol{x}_j)-\frac{1}{\;n\;}\sum_{r=1}^{n}\boldsymbol{\Phi}(\boldsymbol{x}_r)\right)^T\left(\boldsymbol{\Phi}(\boldsymbol{x}_k)-\frac{1}{\;n\;}\sum_{s=1}^{n}\boldsymbol{\Phi}(\boldsymbol{x}_s)\right) \\
+                                               & =K(\boldsymbol{x}_j,\boldsymbol{x}_k)-\frac{1}{\;n\;}\sum_{r=1}^{n}K(\boldsymbol{x}_r,\boldsymbol{x}_k)-\frac{1}{\;n\;}\sum_{s=1}^{n}K(\boldsymbol{x}_j,\boldsymbol{x}_s)                                                             \\&\quad+\frac{1}{\;n^2\;}\sum_{r=1}^{n}\sum_{s=1}^{n}K(\boldsymbol{x}_r,\boldsymbol{x}_s)
+    \end{align*}
+\end{frame}
+\begin{frame}
+    \frametitle{カーネル法}
+    さらに,中心化したデータに基づく,内積で定義されたカーネル関数を成分とする行列$K_c$を(5)で定義されるカーネル関数を成分とする行列$K$で置き換える.このため,特徴空間上の$r$次元データを行ベクトルとする$n\times r$データ行列を次のように定義する.
+    \begin{align*}
+        Z=\left(\boldsymbol{\Phi}(\boldsymbol{x}_1),\boldsymbol{\Phi}(\boldsymbol{x}_2),\dots,\boldsymbol{\Phi}(\boldsymbol{x}_n)\right)^T
+    \end{align*}
+    このとき標本平均ベクトルは
+    \begin{align*}
+        \overline{\boldsymbol{\Phi}}=\frac{1}{\;n\;}\sum_{i=1}^{n}\boldsymbol{\Phi}(\boldsymbol{x}_i)=\frac{1}{\;n\;}Z^T\boldsymbol{1}_n
+    \end{align*}
+    と表せる.ただし,$\boldsymbol{1}_n$はその成分がすべて$1$の$n$次元ベクトルとする.また,中心化したデータを行ベクトルとするデータ行列$Z_c$は
+\end{frame}
+\begin{frame}
+    \frametitle{カーネル法}
+    \begin{align*}
+        Z_c=
+        \begin{pmatrix}
+            {\boldsymbol{\Phi}_c(\boldsymbol{x}_1)}^T \\
+            {\boldsymbol{\Phi}_c(\boldsymbol{x}_2)}^T \\
+            \vdots                                    \\
+            {\boldsymbol{\Phi}_c(\boldsymbol{x}_n)}^T
+        \end{pmatrix}
+        =
+        \begin{pmatrix}
+            {\boldsymbol{\Phi}(\boldsymbol{x}_1)}^T \\
+            {\boldsymbol{\Phi}(\boldsymbol{x}_2)}^T \\
+            \vdots                                  \\
+            {\boldsymbol{\Phi}(\boldsymbol{x}_n)}^T
+        \end{pmatrix}
+        -
+        \begin{pmatrix}
+            1 \\1\\ \vdots \\1
+        \end{pmatrix}\overline{\boldsymbol{\Phi}}^T=
+        Z-\frac{1}{\;n\;}\boldsymbol{1}_n\boldsymbol{1}_n^TZ
+    \end{align*}
+    と表すことができる.\vskip.5\baselineskip
+    この結果から
+\end{frame}
+\begin{frame}
+    \frametitle{カーネル法}
+    \begin{align*}
+        K_c=Z_cZ_c^T & =\left(Z-\frac{1}{\;n\;}\boldsymbol{1}_n\boldsymbol{1}_c^TZ\right)\left(Z-\frac{1}{\;n\;}\boldsymbol{1}_n\boldsymbol{1}_c^TZ\right)^T       \\
+                     & =\left(I_n-\frac{1}{\;n\;}\boldsymbol{1}_n\boldsymbol{1}_n^T\right)ZZ^T\left(I_n-\frac{1}{\;n\;}\boldsymbol{1}_n\boldsymbol{1}_n^T\right)^T
+    \end{align*}
+    で与えられる.ただし$I_n$は$n$次単位行列である．したがって，中心化したデータに基づく内積をカーネル関数で置き換えた$K_c=Z_cZ_c^T$は，特徴空間へ変換したデータに基づく内積を，カーネル関数で置き換えた$n$次対称行列$K=ZZ^T$によって
+    \begin{align*}
+        K_c=\left(I_n-\frac{1}{\;n\;}\boldsymbol{1}_n\boldsymbol{1}_n^T\right)K\left(I_n-\frac{1}{\;n\;}\boldsymbol{1}_n\boldsymbol{1}_n^T\right)^T
+    \end{align*}
+    と表すことができる．
 \end{frame}
 \end{document}
