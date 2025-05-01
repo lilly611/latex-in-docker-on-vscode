@@ -1,0 +1,187 @@
+% This document is based on http://math.shinshu-u.ac.jp/~hanaki/beamer/beamer.html
+\documentclass[dvipdfmx,cjk]{beamer}
+%\documentclass[dvipdfm,cjk]{beamer} % オプションは環境や利用するプログラムによって変える
+%\documentclass[dvips,cjk]{beamer}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{latexsym}
+
+
+% しおり（PDF にしたときの目次）の文字化け防止
+\AtBeginDvi{\special{pdf:tounicode 90ms-RKSJ-UCS2}}
+%\AtBeginDvi{\special{pdf:tounicode EUC-UCS2}}
+
+% 右下のアイコンを消す
+\setbeamertemplate{navigation symbols}{}
+
+% テーマ
+\usetheme{CambridgeUS}
+%\usetheme{Boadilla}           %% Beamer のディレクトリの中の
+%\usetheme{Madrid}             %% beamerthemeCambridgeUS.sty を指定
+%\usetheme{Antibes}            %% 色々と試してみるといいだろう
+%\usetheme{Montpellier}        %% サンプルが beamer\doc に色々とある。
+%\usetheme{Berkeley}
+%\usetheme{Goettingen}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+
+\usecolortheme{rose}          %% colortheme を選ぶと色使いが変わる
+%\usecolortheme{albatross}
+
+%\useoutertheme{shadow}                 %% 箱に影をつける
+\usefonttheme{professionalfonts}       %% 数式の文字を通常の LaTeX と同じにする
+
+%\setbeamercovered{transparent}         %% 消えている文字をうっすらと表示する
+%\setbeamertemplate{theorems}[numbered]  %% 定理に番号をつける
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{proposition}[thm]{Proposition}
+\theoremstyle{example}
+\newtheorem{exam}[thm]{Example}
+\newtheorem{remark}[thm]{Remark}
+\newtheorem{question}[thm]{Question}
+\newtheorem{prob}[thm]{Problem}
+\newtheorem{rev}[thm]{Review}
+
+
+% メタ情報
+\begin{document}
+\title[]{カーネル主成分分析}
+\author[]{照屋 佑喜仁}
+\institute[]{}
+\date{\today}
+
+% タイトルスライド
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% 目次（\section 名が自動で挿入される）
+\begin{frame}
+    \tableofcontents
+\end{frame}
+
+% セクション名（サンプルでは左上のスペースに表示される）
+\section{高次元空間への写像}
+\begin{frame}
+    \frametitle{高次元空間への写像} % スライドのタイトル
+    \begin{itemize}
+        \item 前回の最後で，カーネル法に基づく主成分分析の基本的な考え方が述べられた．
+        \item 高次元空間に散らばるデータの非線形構造を捉える一つのアプローチがカーネル主成分分析であった．
+        \item 中心化したデータの分散共分散行列$S$の固有値問題を，データ間の内積で定義される新たな行列$K$の固有値問題に置き換えて主成分を求めることができそう
+        \item この項で，固有値問題の置き換えを，高次元空間へと写像したデータに対して適応する．
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{高次元空間への写像}
+    入力空間上の$n$個の$p$次元観測データ$\boldsymbol{x}_1,\boldsymbol{x}_2,\cdots ,\boldsymbol{x}_n$を\textbf{特徴空間}とよばれる高次元空間へ写像し，特徴空間上で主成分分析を実行する．
+    \vskip.5\baselineskip
+    一般に，入力空間上の$p$次元データ$\boldsymbol{x}=(x_1,x_2,\cdots,x_p)^T$を，より高次の$r$次元空間へと変換する非線形空間を次のようにベクトルで表記する．
+    \begin{align*}
+        \boldsymbol{\Phi}(\boldsymbol{x})\equiv(\phi_1(\boldsymbol{x}),\phi_2(\boldsymbol{x}),\cdots,\phi_r(\boldsymbol{x}))^T
+    \end{align*}
+    このベクトルの各成分$\phi_j(\boldsymbol{x})$は$p$変数実数値関数とする．\vskip.5\baselineskip
+    これのベクトルによって，観測された$n$個の$p$次元データを$r$次元特徴空間上へと写像したデータを
+    \begin{align*}
+        \boldsymbol{\Phi}(\boldsymbol{x}_1),\boldsymbol{\Phi}(\boldsymbol{x}_2),\cdots,\boldsymbol{\Phi}(\boldsymbol{x}_n)
+    \end{align*}
+    とする．この特徴空間上の$n$個の$r$次元データに基づいて主成分分析を実行する．
+\end{frame}
+
+\begin{frame}
+    \frametitle{高次元空間への写像}
+    まず，特徴空間上に散らばる$r$次元データの重心に原点を移す．（つまり中心化する．）\vskip.5\baselineskip
+    標本平均ベクトルは
+    \begin{align*}
+        \overline{\boldsymbol{\Phi}}=\frac{1}{\;n\;}\sum_{i=1}^{n}\boldsymbol{\Phi}(\boldsymbol{x}_i)
+    \end{align*}
+    となり，次のようにデータを中心化を行う．
+    \begin{align*}
+        \boldsymbol{\Phi}_c(\boldsymbol{x}_i)=\boldsymbol{\Phi}(\boldsymbol{x}_i)-\overline{\boldsymbol{\Phi}},\quad i=1,2,\cdots,n
+    \end{align*}
+\end{frame}
+
+\begin{frame}
+    \frametitle{高次元空間への写像}
+    中心化したデータの標本平均ベクトルは
+    \begin{align*}
+        \frac{1}{\;n\;}\sum_{i=1}^{n}\boldsymbol{\Phi}_c(\boldsymbol{x}_i)=\frac{1}{\;n\;}\sum_{i=1}^{n}\left\{\boldsymbol{\Phi}(\boldsymbol{x}_i)-\overline{\boldsymbol{\Phi}}\right\}=\boldsymbol{0}
+    \end{align*}
+    （中心化したため当たり前）\vskip.5\baselineskip
+    次に，中心化したデータを行ベクトルとする$n\times r$行列を
+    \begin{align*}
+        Z_c=\left(\boldsymbol{\Phi}_c(\boldsymbol{x}_1),\boldsymbol{\Phi}_c(\boldsymbol{x}_2),\cdots,\boldsymbol{\Phi}_c(\boldsymbol{x}_n)\right)^T
+    \end{align*}
+    とすると，標本分散共分散行列は
+    \begin{align*}
+        S_c=\frac{1}{\;n\;}\sum_{i=1}^{n}\boldsymbol{\Phi}_c(\boldsymbol{x}_i)\boldsymbol{\Phi}_c(\boldsymbol{x}_i)^T=\frac{1}{\;n\;}Z_c^TZ_c
+    \end{align*}
+\end{frame}
+
+\begin{frame}
+    \frametitle{高次元空間への写像}
+    前回行ったように，分散共分散行列$S_c$の固有値問題を，特徴空間上のデータ間の内積に基づく行列の固有値問題へと置き換える．\vskip.5\baselineskip
+    一般に，行列$S_c$の第$\alpha$番目の固有値$\lambda_\alpha^F$と対応する正規化済みの固有ベクトル$\boldsymbol{w}_\alpha^F$の関係式
+    \begin{align*}
+        S_c\boldsymbol{w}_\alpha^F=\lambda_\alpha^F\boldsymbol{w}_\alpha^F\tag{1}
+    \end{align*}
+    から，固有ベクトルは，中心化した特徴空間上のデータを基底として次のように表すことができるのであった．（前回）
+\end{frame}
+
+\begin{frame}
+    \frametitle{高次元空間への写像}
+    \begin{rev}
+        \begin{align*}
+            S_c\boldsymbol{w}_\alpha^F=\lambda_\alpha^F\boldsymbol{w}_\alpha^F
+        \end{align*}
+        の左辺は次のように書き表せる
+        \begin{align*}
+            S_c\boldsymbol{w}_\alpha^F & =\frac{1}{\;n\;}\sum_{i=1}^{n}\boldsymbol{\Phi}_c(\boldsymbol{x}_i)\boldsymbol{\Phi}_c(\boldsymbol{x}_i)^T\boldsymbol{w}_\alpha^F                                                                                                         \\
+                                       & =\frac{1}{\;n\;}\sum_{i=1}^{n}\left\{\boldsymbol{\Phi}_c(\boldsymbol{x}_i)^T\boldsymbol{w}_\alpha^F\right\}\boldsymbol{\Phi}_c(\boldsymbol{x}_i)\quad\because\text{$\boldsymbol{\Phi}_c(\boldsymbol{x}_i)^T\boldsymbol{w}_\alpha^F$はスカラー}
+        \end{align*}
+    \end{rev}
+\end{frame}
+
+\begin{frame}
+    \frametitle{高次元空間への写像}
+    改めて固有ベクトルは次で表せる．
+    \begin{align*}
+        \boldsymbol{w}_\alpha^F=Z_c^T\boldsymbol{c}_\alpha^F,\quad Z_c^T=\left(\boldsymbol{\Phi}_c(\boldsymbol{x}_1),\boldsymbol{\Phi}_c(\boldsymbol{x}_2),\cdots,\boldsymbol{\Phi}_c(\boldsymbol{x}_n),\right)\tag{3}
+    \end{align*}
+    ただし，$\boldsymbol{c}_\alpha^T$は$n$次元係数ベクトルとする．これを(1)に代入すると
+    \begin{align*}
+        \frac{1}{\;n\;}Z_c^TZ_cZ_c^T\boldsymbol{c}_\alpha^F=\lambda_\alpha^FZ_c^T\boldsymbol{c}_\alpha^F
+    \end{align*}
+    左から$Z_c$を掛けて分母を払うと
+    \begin{align*}
+        Z_cZ_c^TZ_cZ_c^T\boldsymbol{c}_\alpha^F=n\lambda_\alpha^FZ_cZ_c^T\boldsymbol{c}_\alpha^F\tag{2}
+    \end{align*}
+    を得る．$Z_cZ_c^T$は次のように特徴空間上の中心化したデータ間の内積を成分とする$n$次元対称行列である．
+\end{frame}
+\begin{frame}
+    \frametitle{高次元空間への写像}
+    \begin{align*}
+        K_c & \equiv Z_cZ_c^T                                                                                                                                                                                                                                      \\
+            & =\begin{pmatrix}
+                   \boldsymbol{\Phi}_c(\boldsymbol{x}_1)^T\boldsymbol{\Phi}_c(\boldsymbol{x}_1) & \boldsymbol{\Phi}_c(\boldsymbol{x}_1)^T\boldsymbol{\Phi}_c(\boldsymbol{x}_2) & \cdots & \boldsymbol{\Phi}_c(\boldsymbol{x}_1)^T\boldsymbol{\Phi}_c(\boldsymbol{x}_n) \\
+                   \boldsymbol{\Phi}_c(\boldsymbol{x}_2)^T\boldsymbol{\Phi}_c(\boldsymbol{x}_1) & \boldsymbol{\Phi}_c(\boldsymbol{x}_2)^T\boldsymbol{\Phi}_c(\boldsymbol{x}_2) & \cdots & \boldsymbol{\Phi}_c(\boldsymbol{x}_2)^T\boldsymbol{\Phi}_c(\boldsymbol{x}_n) \\
+                   \vdots                                                                       & \vdots                                                                       & \ddots & \vdots                                                                       \\
+                   \boldsymbol{\Phi}_c(\boldsymbol{x}_n)^T\boldsymbol{\Phi}_c(\boldsymbol{x}_1) & \boldsymbol{\Phi}_c(\boldsymbol{x}_n)^T\boldsymbol{\Phi}_c(\boldsymbol{x}_2) & \dots  & \boldsymbol{\Phi}_c(\boldsymbol{x}_n)^T\boldsymbol{\Phi}_c(\boldsymbol{x}_n)
+               \end{pmatrix}
+    \end{align*}
+    よって(2)は次のように表される．
+    \begin{align*}
+        K_c^2\boldsymbol{w}_\alpha^F=n\lambda_\alpha^F\boldsymbol{w}_\alpha^F
+    \end{align*}
+\end{frame}
+\begin{frame}
+    \frametitle{高次元空間への写像}
+    したがって，第$\alpha$番目の大きさの固有値$\lambda_\alpha^F(\neq0)$と対応する固有ベクトル$\boldsymbol{c}_\alpha^F$を求める問題は，次の$n$次対称行列$K_c$の固有値問題へと帰着される．
+    \begin{align*}
+        K_c\boldsymbol{c}_\alpha^F=n\lambda_\alpha^F\boldsymbol{c}_\alpha^F
+    \end{align*}
+    求めた固有ベクトル$\boldsymbol{c}_\alpha^F$を(3)へ代入すると
+\end{frame}
+\end{document}

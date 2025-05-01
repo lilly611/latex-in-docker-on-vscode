@@ -1,0 +1,144 @@
+\documentclass[a4j,uplatex]{jsarticle}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{physics}
+
+\theoremstyle{definition}
+\newtheorem{dfn}{Definition}[section]
+\newtheorem*{df*}{Definition}
+\newtheorem{prop}[dfn]{Proposition}
+\newtheorem{lem}[dfn]{Lemma}
+\newtheorem{thm}[dfn]{Theorem}
+\newtheorem{cor}[dfn]{Corollary}
+\newtheorem{rem}[dfn]{Remark}
+\newtheorem{fact}[dfn]{Fact}
+
+\title{数理最適化大意　課題1}
+\author{理学部4年　照屋佑喜仁}
+
+\begin{document}
+\maketitle
+\section{問題1}
+$b\in \mathbb{R}^m,\, c \in \mathbb{R}^n,\, A\in\mathbb{R}^{m\times n}$を定数ベクトル，定数行列とする．\\
+次の線形計画問題を標準形に書き換える．
+\begin{align*}
+    \inf \left\{b^T y: c-A^Ty \geq  0 ,\,y \in \mathbb{R}^m\right\}\tag{1}
+\end{align*}
+まず，$s=c-A^Ty$と置くことで
+\begin{align*}
+    (1) \; = \inf\left\{ b^Ty:c-A^Ty=s,s\geq 0,y\in\mathbb{R}^m,s\in\mathbb{R}^n \right\}
+\end{align*}
+ここで，$y=y^+-y^-,\; y^+,y^-\geq 0$と置けば
+\begin{align*}
+    (1) & =\inf \left\{ b^T(y^+-y^-):\, c-A^T(y^+-y^-)=s,\: y^+,y^-,s\geq 0,\: s\in\mathbb{R}^n,\: y^+,y^-\in\mathbb{R}^m \right\} \\
+        & =\inf \left\{ \left(\begin{matrix}
+                                      b \\-b\\0
+                                  \end{matrix}\right)^T
+    \left(
+    \begin{matrix}
+            y^+ \\y^-\\s
+        \end{matrix}
+    \right)
+    :(A^T,-A^T,I_n)
+    \left(
+    \begin{matrix}
+            y^+ \\y^-\\s
+        \end{matrix}
+    \right)
+    =c,\,
+    \left(
+    \begin{matrix}
+            y^+ \\y^-\\s
+        \end{matrix}
+    \right)\geq 0, \,     \left(
+    \begin{matrix}
+            y^+ \\y^-\\s
+        \end{matrix}
+    \right)\in \mathbb{R}^{2m+n}
+    \right\}
+\end{align*}
+$\left(\begin{matrix}
+            b \\-b\\0
+        \end{matrix}\right)^T=\tilde{b},\:     \left(
+    \begin{matrix}
+            y^+ \\y^-\\s
+        \end{matrix}
+    \right)=\tilde{x},\,(A^T,-A^T,I_n)=\tilde{A}$とすることで
+
+\begin{align*}
+    (1)=\inf \left\{ \tilde{b}^T\tilde{x}:\; \tilde{A}\tilde{x}=c,\; \tilde{x}\geq 0,\; \tilde{x}\in\mathbb{R}^2m+n\right\}
+\end{align*}
+と標準形で書くことができた．$\square$
+
+\section{問題2}
+\subsection{Q1}
+次の線形計画問題の双対問題について考える．
+\begin{align*}
+    \inf \left\{ x:\; x+y+z=72,\, x+y\geq 50,\,x+z\geq 32,\,y+z\geq 20,\; x,y,z\geq 0 \right\}\tag{2}
+\end{align*}
+まず，この線形計画問題は次と同値である．
+\begin{align*}
+    \inf \left\{x:\; x+y+z=72,\,x+y-50=a,x+z-32=b,y+z-20=c,\; x,y,z,a,b,c\geq 0\right\}
+\end{align*}
+ここで
+$A=
+    \begin{pmatrix}
+        1 & 1 & 1 & 0  & 0  & 0  \\
+        1 & 1 & 0 & -1 & 0  & 0  \\
+        1 & 0 & 1 & 0  & -1 & 0  \\
+        0 & 1 & 1 & 0  & 0  & -1
+    \end{pmatrix},\boldsymbol{x}=\begin{pmatrix}
+        x & y & z & a & b & c
+    \end{pmatrix}^T,
+    \boldsymbol{b}=\begin{pmatrix}
+        72 & 50 & 32 & 20
+    \end{pmatrix}^T,\\
+    \boldsymbol{c}=\begin{pmatrix}
+        1 & 0 & 0 & 0 & 0 & 0
+    \end{pmatrix}^T
+$と置けば
+\begin{align*}
+    \inf \left\{\boldsymbol{c}^T\boldsymbol{x}:\; A\boldsymbol{x}=\boldsymbol{b},\: \boldsymbol{x}\geq 0,\: \boldsymbol{x}\in\mathbb{R}^6\right\}
+\end{align*}
+とも同値である．\\
+双対問題を考えるにあたり，もとの線形計画問題を下から評価する$\boldsymbol{b}^T\boldsymbol{y}$を考え，それを最大化させると考える．\\
+$\boldsymbol{y}\in \mathbb{R}^6$とする．
+\begin{align*}
+    \boldsymbol{b}^T\boldsymbol{y}=(A\boldsymbol{x})^T\boldsymbol{y} & =\boldsymbol{x}^TA^T\boldsymbol{y}                                                             \\
+                                                                     & =\left\{(A^T\boldsymbol{y})^T\boldsymbol{x}\right\}^T                                          \\
+                                                                     & =(A^T\boldsymbol{y})^T\boldsymbol{x} \quad \because \boldsymbol{b}^T\boldsymbol{y}\text{はスカラー}
+\end{align*}
+$\boldsymbol{x}\geq0$を満たすので，係数ベクトル$\boldsymbol{y}$が$A^T\boldsymbol{y}\geq \boldsymbol{c}$を満たせば
+\begin{align*}
+    \boldsymbol{b}^T\boldsymbol{y}=(A^T\boldsymbol{y})^T\boldsymbol{x}\leq \boldsymbol{c}^T\boldsymbol{x}
+\end{align*}
+となり，もとの線形計画問題の目的関数値を下から評価できる．よって求める双対問題は
+\begin{align*}
+     & \sup \left\{\boldsymbol{b}^T\boldsymbol{y}:\; A^T\boldsymbol{y}\geq \boldsymbol{c},\; \boldsymbol{y}\in\mathbb{R}^4\right\}                                                                              \\
+     & =\sup \left\{\boldsymbol{b}^T\boldsymbol{y}:\; \boldsymbol{c}-A^T\boldsymbol{y}=\boldsymbol{z} ,\; \boldsymbol{z}\geq 0,\; \boldsymbol{y}\in\mathbb{R}^4,\; \boldsymbol{z}\in\mathbb{R}^6\right\}\tag{3}
+\end{align*}$\square$
+
+\subsection{Q2}
+まず，(2)の実行可能解で目的関数$x$をできるだけ小さくするようなものを考えてみる．条件より
+\begin{align*}
+    72-z\geq50\quad \therefore z\leq22 \\
+    72-y\geq32\quad \therefore y\leq40 \\
+    72-x\geq20\quad \therefore x\leq52
+\end{align*}
+が直ちにわかる．\\
+ここで$x+y\geq50$に注目すると$x$が最小となるのは$y$ができるだけ大きいときと考察できる．上の条件から，$y=40$とすると，$x\geq10$となり，その最小値$x=10$を取れば$x+y+z=72$より$z=22$となりこれはどの条件も満たすため$(x,y,z)=(10,40,22)$は実行可能解である．この実行可能解を(2)の表記に合わせて$\boldsymbol{x}^*=(10,40,22,0,0,42)$とおく．\\
+(3)の実行可能解を$\boldsymbol{y}^*,\boldsymbol{z}^*$としておく．仮に$\boldsymbol{x}^*$が最小解であるとして，相補性定理より$\boldsymbol{x}^*_i\boldsymbol{z}^*_i=0,\; (i=1,2,\cdots,6)$を解く．
+$\boldsymbol{x}^*_i> 0$のとき$\boldsymbol{z}^*_i=0$つまり$(A^T\boldsymbol{y}^*)_i=\boldsymbol{c}_i$を解けば良いので，（$\boldsymbol{x}_i=0$のとき$\boldsymbol{z}^*_i$は任意の値で相補性を満たすため考えなくてよい．）
+\begin{align}
+    \begin{cases}
+        y_1+y_2+y_3=1 \\
+        y_1+y_2+y_4=0 \\
+        y_1+y_3+y_4=0 \\
+        -y_4=0
+    \end{cases}
+\end{align}
+これを解いて$\boldsymbol{y}^*=(-1,1,1,0)^T$これは(3)の条件を満たすため実行可能解．（ちなみに$\boldsymbol{z}^*=(0,0,0,0,1,0)^T$となった．確かに条件を満たす．）\\
+よってこれは最適解である．目的関数の値は$\boldsymbol{b}^T\boldsymbol{y}^*=10$となり最小値に一致する．最小値と最適値は一致し$10$である．
+\end{document}

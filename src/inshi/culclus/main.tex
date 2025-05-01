@@ -3,6 +3,8 @@
 \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{amsfonts}
+\usepackage{physics}
+
 \theoremstyle{definition}
 \newtheorem{dfn}{Definition}[section]
 \newtheorem*{df*}{Definition}
@@ -51,4 +53,36 @@
         \int_{a}^{b}\sqrt{1+\left\{f'(x)\right\}^2}dt
     \end{align*}
 \end{df*}
+
+\section{線形代数}
+\subsection{行列}
+
+\begin{thm}
+    冪零行列の固有値は$0$のみ
+\end{thm}
+
+\begin{rem}
+    固有ベクトルは$\boldsymbol{0}$では無い（定義）（あたりまえ）
+\end{rem}
+
+\begin{thm}
+    $B$を正則行列とすると，$\boldsymbol{x}\neq \boldsymbol{0} \implies B\boldsymbol{x}\neq \boldsymbol{0}$\\
+    対偶を取るとわかる
+\end{thm}
+
+\begin{thm}
+    実対称行列は直行行列によって対角化可能である．証明はやばいかもしれない
+\end{thm}
+
+\subsubsection{一次独立}
+\begin{thm}
+    行列$A$の階数($\rank$)は，$A$の一次独立な列（行）ベクトルの最大数と一致する．
+\end{thm}
+
+\begin{thm}
+    $\boldsymbol{a}_1 \cdots \boldsymbol{a}_n$が1次独立であることと$|\boldsymbol{a}_1\cdots\boldsymbol{a}_n|\neq 0$は同値．\\
+    これは1次独立の定義と連立方程式が自明な解しか持たないこと，正則と行列式の関係を考えれば良い．
+\end{thm}
+
+
 \end{document}
