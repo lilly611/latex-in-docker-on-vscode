@@ -299,4 +299,46 @@
     \end{align*}
     と表すことができる．
 \end{frame}
+\begin{frame}
+    \frametitle{非線形主成分分析のプロセス}
+    $n$個の$p$次元データ$\boldsymbol{x}_1,\boldsymbol{x}_2,\dots,\boldsymbol{x}_n$が観測されたとする．
+    \begin{itemize}
+        \item 入力空間上の観測データを非線形写像$\boldsymbol{\Phi}(\boldsymbol{x})=\left(\phi_1(\boldsymbol{x}),\phi_2(\boldsymbol{x}),\dots,\phi_r(\boldsymbol{x})\right)^T$によって高次元特徴空間へと変換した$n$個の$r$次元データを
+              \begin{align*}
+                  \boldsymbol{\Phi}(\boldsymbol{x}_1),\boldsymbol{\Phi}(\boldsymbol{x}_2),\cdots,\boldsymbol{\Phi}(\boldsymbol{x}_n)
+              \end{align*}とする．
+        \item 特徴空間上の$r$次元データ間の内積をカーネル関数で置き換える．
+              \begin{align*}
+                  K(\boldsymbol{x}_j,\boldsymbol{x}_k)={\boldsymbol{\Phi}(\boldsymbol{x}_j)}^T\boldsymbol{\Phi}(\boldsymbol{x}_k)
+              \end{align*}
+    \end{itemize}
+\end{frame}
+\begin{frame}
+    \frametitle{非線形主成分分析のプロセス}
+    \begin{itemize}
+        \item カーネル関数$K(\boldsymbol{x}_j,\boldsymbol{x}_k)$を第$(j,k)$成分とする$n$次カーネル行列を$K$として，中心化したデータ間の内積を成分とする$n$次カーネル行列$K_c$を求める．
+              \begin{align*}
+                  K_c=\left(I_n-\frac{1}{\;n\;}\boldsymbol{1}_n\boldsymbol{1}_c^T\right)K\left(I_n-\frac{1}{\;n\;}\boldsymbol{1}_n\boldsymbol{1}_c^T\right)^T
+              \end{align*}
+        \item $K_c$に対して，条件$n\lambda^F{\boldsymbol{c}^F}^T\boldsymbol{c}^F$のもとで次の固有値問題の解を求める．
+              \begin{align*}
+                  K_c\boldsymbol{c}^F=n\lambda^F\boldsymbol{c}^F
+              \end{align*}
+              大きさの順に並べた固有値の中で$\alpha$番目の$0$でない固有値に対応するベクトルを$\boldsymbol{c}_\alpha^F=(c_{1\alpha}^F,c_{2\alpha}^F,\cdots,c_{n\alpha}^F)^T$とすると，第$\alpha$番目の主成分は次で与えられる．
+              \begin{align*}
+                  y_\alpha=\sum_{i=1}^{n}c_{i\alpha}^FK_c(\boldsymbol{x}_i,\boldsymbol{x})
+              \end{align*}
+
+    \end{itemize}
+
+\end{frame}
+\begin{frame}
+    \frametitle{非線形主成分分析のプロセス}
+    ただし$K_c$は中心化したデータ間の内積をカーネル関数で置き換えたものである．
+    \begin{align*}
+        K_c(\boldsymbol{x}_j,\boldsymbol{x}_k) & ={\boldsymbol{\Phi}_c(\boldsymbol{x}_j)}^T\boldsymbol{\Phi}_c(\boldsymbol{x}_k)                                                                                                                                                       \\
+                                               & =\left(\boldsymbol{\Phi}(\boldsymbol{x}_j)-\frac{1}{\;n\;}\sum_{r=1}^{n}\boldsymbol{\Phi}(\boldsymbol{x}_r)\right)^T\left(\boldsymbol{\Phi}(\boldsymbol{x}_k)-\frac{1}{\;n\;}\sum_{s=1}^{n}\boldsymbol{\Phi}(\boldsymbol{x}_s)\right) \\
+                                               & =K(\boldsymbol{x}_j,\boldsymbol{x}_k)-\frac{1}{\;n\;}\sum_{r=1}^{n}K(\boldsymbol{x}_r,\boldsymbol{x}_k)-\frac{1}{\;n\;}\sum_{s=1}^{n}K(\boldsymbol{x}_j,\boldsymbol{x}_s)                                                             \\&\quad+\frac{1}{\;n^2\;}\sum_{r=1}^{n}\sum_{s=1}^{n}K(\boldsymbol{x}_r,\boldsymbol{x}_s)
+    \end{align*}
+\end{frame}
 \end{document}
