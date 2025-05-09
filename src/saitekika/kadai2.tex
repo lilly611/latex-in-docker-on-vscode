@@ -1,0 +1,162 @@
+\documentclass[a4j,uplatex]{jsarticle}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{physics}
+
+\theoremstyle{definition}
+\newtheorem{dfn}{Definition}[section]
+\newtheorem*{df*}{Definition}
+\newtheorem{prop}[dfn]{Proposition}
+\newtheorem{lem}[dfn]{Lemma}
+\newtheorem{thm}[dfn]{Theorem}
+\newtheorem{cor}[dfn]{Corollary}
+\newtheorem{rem}[dfn]{Remark}
+\newtheorem{fact}[dfn]{Fact}
+%定義の：＝を書くためのやつ
+\def\coloneqq{\mathrel{\mathop:}=}%
+
+\title{数理最適化大意　課題2}
+\author{理学部4年　照屋佑喜仁}
+
+\begin{document}
+\maketitle
+\section{問題1}
+\subsection{P1}
+まずLKPを標準形で表すことを考える．LKPは次のように表すことができる．
+\begin{align*}
+    p^* & \coloneqq \max \left\{\sum_{i=1}^{n}v_ix_i:\sum_{i=1}^{n}w_ix_i\leq W,\; 0\leq x\leq 1,\;(i=1,\dots,n)\right\}         \\
+        & =\max\left\{\sum_{i=1}^{n}v_ix_i:\sum_{i=1}^{n}w_ix_i+q=W,\;x_i+p_i=1,x_i\geq0,q\geq0,p_i\geq0,\;(i=1,\dots,n)\right\}
+\end{align*}
+ここで，
+\begin{align*}
+    A         & =\begin{pmatrix}
+                     w_1    & w_2 & \dots  & w_n & 0      & 0 & 0      & \dots & 0 & 1      \\
+                     1      & 0   & \dots  & 0   & 1      & 0 & 0      & \dots & 0 & 0      \\
+                     0      & 1   & \dots  & 0   & 0      & 1 & 0      & \dots & 0 & 0      \\
+                     \vdots &     & \ddots &     & \vdots &   & \ddots &       &   & \vdots \\
+                     0      & 0   & \dots  & 1   & 0      & 0 & 0      & \dots & 1 & 0
+                 \end{pmatrix} \\
+    \tilde{x} & =(x_1,\dots,x_n,p_1,\dots,p_n,q)^T                                      \\
+    b         & =(W,1,\dots,1)^T                                                        \\
+    c         & =(v_1,\dots,v_n,0,\dots,0)
+\end{align*}
+と置くことにより
+\begin{align*}
+    p^* & =\sup\left\{c^T\tilde{x}:A\tilde{x}=b,\;\tilde{x}\geq0\right\}
+\end{align*}
+標準形にするために$\inf$で表したい．$\tilde{c}\coloneqq -c$とおいて
+\begin{align*}
+    p^*=\inf\left\{\tilde{c}^T\tilde{x}:A\tilde{x}=b,\;\tilde{x}\geq0\right\}\tag{1}
+\end{align*}
+これがKLPの標準形である．
+よって双対問題は
+\begin{align*}
+    d^*\coloneqq\sup\left\{b^Ty:A^Ty\leq \tilde{c}\right\}\tag{2}
+\end{align*}
+となり，
+\begin{align*}
+    y_i=\begin{cases}
+            -t\quad i=1 \\
+            -s_{i-1} \quad i \geq 2
+        \end{cases}
+\end{align*}
+と置いて目的関数を$-1$倍すれば
+\begin{align*}
+    d^*=\min\left\{Wt+\sum_{i=1}^{n}s_i:w_it+s_i\geq v_i\;(i=1,\dots,n),t,s_1,\dots,s_n\geq0\right\}
+\end{align*}
+を得る．（証明終）
+\subsection{P2}
+まず，与えられた解が(1),(2)の実行解か確かめて，相補性定理を用いて最適解かどうか確かめる．与えられた解から$\tilde{x}$を求めることができて（$x_i+p_i=1$などの条件を用いるとわかる）
+\begin{align*}
+    \tilde{x}_i=\begin{cases}
+                    1\quad                                   & i=\begin{cases}
+                                                         1,\dots,k \\n+k+2,\dots,2n
+                                                     \end{cases} \\
+                    \frac{W-\sum_{i=1}^{k}w_i}{w_{k+1}}\quad & i=k+1                       \\
+                    0\quad                                   & i=\begin{cases}
+                                                         k+2,\dots,n+k \\2n+1
+                                                     \end{cases}       \\
+                    \frac{\sum_{i=1}^{k+1}w_i-W}{w_{k+1}}    & i=n+k+1\quad                \\
+                \end{cases}
+\end{align*}
+となる．$w_i$についての仮定より$\tilde{x}\geq0$なので実行可能解である．\vskip.5\baselineskip
+また,与えられた解から双対問題の解は
+\begin{align*}
+    y_i=\begin{cases}
+            -\frac{v_{k+1}}{w_{k+1}}\quad               & i=1             \\
+            w_{i-1}\frac{v_{k+1}}{w_{k+1}}-v_{i-1}\quad & i=2,\dots,k+1   \\
+            0\quad                                      & i=k+2,\dots,n+1
+        \end{cases}
+\end{align*}
+となり，$v_i,w_i$の比の仮定からこれは実行可能解であった．($A^Ty\leq c$を満たす．)
+ここで，
+\begin{align*}
+    c-A^Ty & =\begin{pmatrix}
+                  -v_1-\left\{w_1(-\frac{v_k+1}{w_{k+1}})+w_1\frac{v_{k+1}}{w_{k+1}}-v_1\right\} \\
+                  -v_2-\left\{w_2(-\frac{v_k+1}{w_{k+1}})+w_2\frac{v_{k+1}}{w_{k+1}}-v_2\right\} \\
+                  \vdots                                                                         \\
+                  -v_k-\left\{w_k(-\frac{v_k+1}{w_{k+1}})+w_k\frac{v_{k+1}}{w_{k+1}}-v_k\right\} \\
+                  -v_{k+1}-\left\{w_{k+1}(-\frac{v_{k+1}}{w_{k+1}})\right\}                      \\
+                  \vdots                                                                         \\
+                  -v_n-\left\{w_n(-\frac{v_{k+1}}{w_{k+1}})\right\}                              \\
+                  -\left\{w_1\frac{v_{k+1}}{w_{k+1}}-v_1\right\}                                 \\
+                  -\left\{w_k\frac{v_{k+1}}{w_{k+1}}-v_k\right\}                                 \\
+                  0                                                                              \\
+                  \vdots                                                                         \\
+                  0                                                                              \\
+                  -\left(-\frac{v_{k+1}}{w_{k+1}}\right)
+              \end{pmatrix} \\
+\end{align*}
+\begin{align*}
+    \phantom{c-A^Ty} & = \begin{pmatrix}
+                             0                                                         \\
+                             \vdots                                                    \\
+                             0                                                         \\
+                             0                                                         \\
+                             -v_{k+2}-\left\{w_{k+2}(-\frac{v_{k+1}}{w_{k+1}})\right\} \\
+                             \vdots                                                    \\
+                             -v_n-\left\{w_n(-\frac{v_{k+1}}{w_{k+1}})\right\}         \\
+                             -\left\{w_1\frac{v_{k+1}}{w_{k+1}}-v_1\right\}            \\
+                             -\left\{w_k\frac{v_{k+1}}{w_{k+1}}-v_k\right\}            \\
+                             0                                                         \\
+                             \vdots                                                    \\
+                             0                                                         \\
+                             -\left(-\frac{v_{k+1}}{w_{k+1}}\right)
+                         \end{pmatrix}
+\end{align*}
+よって$\tilde{x}_i\left(c-A^Ty\right)_i$について
+\begin{align*}
+    \begin{cases}
+        i=1,\dots,k+1\text{のとき}\quad \left(c-A^T\right)_i=0    \\
+        i=k+2,\dots,n+k\text{のとき}\quad \tilde{x}_i=0           \\
+        i=n+k+1,\dots,2n\text{のとき}\quad \left(c-A^T\right)_i=0 \\
+        i=2n+1\text{のとき}\quad \tilde{x}_i=0
+    \end{cases}
+\end{align*}
+よって$\tilde{x}_i\left(c-A^Ty\right)_i=0$が成り立つから，与えられた解は最適解でありそれぞれLKP，DKPの最大解，最小解であることが示された．
+\section{問題2}
+\begin{itemize}
+    \item{$B_1=\left\{1,2,4,5\right\}$} \\添字集合$B_1$から次の連立方程式
+    \begin{align*}
+        \begin{cases}
+            x_1+x_2=72     \\
+            x_1+x_2-x_4=50 \\
+            x_1-x_5=32     \\
+            x_2=20
+        \end{cases}
+    \end{align*}
+    を得る．これを解くと$x_1=52,x_2=20,x_4=22,x_5=20$を得る．したがって，$(52,20,0,22,20,0)$は基底解であり非負なので実行可能基底解である．
+    \item{$B_2=\left\{1,2,3,6\right\}$} \\添字集合$B_1$から次の連立方程式
+    \begin{align*}
+        \begin{cases}
+            x_1+x_2+x_3=72 \\
+            x_1+x_2=50     \\
+            x_1+x_3=32     \\
+            x_2+x_3=20
+        \end{cases}
+    \end{align*}
+    を得る．これを解くと$x_1=10,x_2=40,x_3=22,x_6=42$を得る．したがって，$(10,40,22,0,0,42)$は基底解であり非負なので実行可能基底解である．
+\end{itemize}
+\end{document}
