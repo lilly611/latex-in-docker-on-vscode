@@ -1,0 +1,404 @@
+% This document is based on http://math.shinshu-u.ac.jp/~hanaki/beamer/beamer.html
+\documentclass[dvipdfmx,cjk]{beamer}
+%\documentclass[dvipdfm,cjk]{beamer} % オプションは環境や利用するプログラムによって変える
+%\documentclass[dvips,cjk]{beamer}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{latexsym}
+
+% しおり（PDF にしたときの目次）の文字化け防止
+\AtBeginDvi{\special{pdf:tounicode 90ms-RKSJ-UCS2}}
+%\AtBeginDvi{\special{pdf:tounicode EUC-UCS2}}
+
+% 右下のアイコンを消す
+\setbeamertemplate{navigation symbols}{}
+
+% テーマ
+\usetheme{CambridgeUS}
+%\usetheme{Boadilla}           %% Beamer のディレクトリの中の
+%\usetheme{Madrid}             %% beamerthemeCambridgeUS.sty を指定
+%\usetheme{Antibes}            %% 色々と試してみるといいだろう
+%\usetheme{Montpellier}        %% サンプルが beamer\doc に色々とある．
+%\usetheme{Berkeley}
+%\usetheme{Goettingen}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+
+\usecolortheme{rose}          %% colortheme を選ぶと色使いが変わる
+%\usecolortheme{albatross}
+
+%\useoutertheme{shadow}                 %% 箱に影をつける
+\usefonttheme{professionalfonts}       %% 数式の文字を通常の LaTeX と同じにする
+
+%\setbeamercovered{transparent}         %% 消えている文字をうっすらと表示する
+%\setbeamertemplate{theorems}[numbered]  %% 定理に番号をつける
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{proposition}[thm]{Proposition}
+\theoremstyle{example}
+\newtheorem{exam}[thm]{Example}
+\newtheorem{remark}[thm]{Remark}
+\newtheorem{question}[thm]{Question}
+\newtheorem{prob}[thm]{Problem}
+\DeclareMathOperator{\Loss}{Loss}
+\DeclareMathOperator{\Var}{var}
+
+% 定理・定義・証明の色設定
+\setbeamercolor{theorem}{bg=yellow!20, fg=black}
+\setbeamercolor{definition}{bg=blue!10, fg=black}
+\setbeamercolor{proof}{bg=green!10, fg=black}
+
+% メタ情報
+\begin{document}
+\title[]{Data Science and Machine Learning}
+\author[]{照屋 佑喜仁}
+\institute[]{}
+\date{\today}
+
+% タイトルスライド
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% 目次（\section 名が自動で挿入される）
+\begin{frame}
+    \tableofcontents
+\end{frame}
+
+% セクション名（サンプルでは左上のスペースに表示される）
+\section{2 STATISTICAL LEARNING}
+\subsection{2.1 Introduction}
+\begin{frame}
+    \frametitle{2.1 Introduction} % スライドのタイトル
+    この章では，statistical learning(統計的学習)の概要とテーマについて導入する
+    \begin{itemize}
+        \item supervised learning(教師あり学習)とunsupervised learning(教師なし学習)の違い
+        \item 教師あり学習の予測性能の評価
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{2.1 Introduction}
+    \begin{itemize}
+        \item データサイエンスの主な課題はデータの数学的分析
+        \item モデルを解釈し、データの不確実性を定量化するような分析は\alert{statistical learning}(統計的学習)と呼ばれる
+        \item 大規模データで予測を行うことに重点が置かれている場合はmachine Learning(機械学習)やdata mining(データマイニング)と呼ばれるのが一般的
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{2.1 Introduction}
+    \begin{itemize}
+        \item データのモデリングには2つの主要な目標
+              \begin{itemize}
+                  \item 観測されたデータに基づいて、関心のある将来の値を正確に予測する
+                  \item データ内の異常なパターン、または興味深いパターンを発見する
+              \end{itemize}
+        \item これを達成するために数理科学の重要な3つ知識を用いる
+              \begin{itemize}
+                  \item \emph{Function approximation}(関数近似)
+                  \item \emph{Optimization}(最適化)
+                  \item \emph{Probability and Statistics}(確率と統計)
+              \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{2.1 Introduction}
+    \begin{itemize}
+        \item Function approximation(関数近似)
+              \begin{itemize}
+                  \item データの数学モデルを構築するとは、ある変数が別の変数にどのように依存するかを理解すること
+                  \item 変数間の関係を表現するために、関数または写像を用いる
+                  \item 通常、この関数は完全にはわからないと仮定するが，十分な計算能力とデータがあれば良く近似できる
+                  \item 最小限のコンピューターとメモリで関数を近似しうる最良の方法を理解する必要がある
+              \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{2.1 Introduction}
+    \begin{itemize}
+        \item Optimization(最適化)
+              \begin{itemize}
+                  \item モデルのクラスが与えられたとき、クラス内のどのモデルが最良か？
+                  \item 何らかの効率的な探索または最適化手順が必要
+                  \item 最適化アルゴリズムとコンピューターコーディングまたはプログラミングの知識が必要
+              \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{2.1 Introduction}
+    \begin{itemize}
+        \item Probability and Statistics(確率と統計)
+              \begin{itemize}
+                  \item 一般に，モデルを適合させるために使われるデータは不規則仮定(確率過程？ random process)または数値ベクトルの実現(結果？ realization)とみなされる
+                  \item その確率法則が将来の予測できる精度を決定する
+                  \item 将来に関する予測に内在する不確実性と、誤差の原因を定量化するために、確率論と統計的推論の知識が必要
+              \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{2.2 Supervised Learning}
+    機械学習の目標の一つとして，入力または特徴ベクトル$\boldsymbol{x}$が与えられた場合に，出力または応答変数$y$を予測することがある．\\
+    例えば
+    \begin{itemize}
+        \item $\boldsymbol{x}$は署名のデジタル画像，$y$は署名が本物か偽物かを表す2値変数
+        \item $\boldsymbol{x}$は妊婦の体重と喫煙習慣，$y$は赤ちゃんの出生時体重
+    \end{itemize}
+    この予測を行う試みは，関数$g$(予測関数)として符号化され，入力$\boldsymbol{x}$を受け取り推定値$g(\boldsymbol{x})\;(=\hat{y})$を出力する．
+\end{frame}
+
+\begin{frame}
+    \frametitle{2.2 Supervised Learning}
+    \begin{itemize}
+        \item regression problems(回帰問題)では，応答変数$y$は実数値をとることができる．
+        \item $y$が有限集合(例えば$y\in\left\{0,1,\dots,c-1\right\}$)に限定される場合，$y$を予測することは入力$\boldsymbol{x}$に対して$y$の値を$c$個のカテゴリーいずれかに分類することと同じであり，classification problems(分類問題)となる．
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{2.2 Supervised Learning}
+    \begin{itemize}
+        \item 予測$\hat{y}$の精度を，与えられている応答$y$に対してLoss function(損失関数)$\Loss (y,\hat{y})$と呼ばれる関数を用いて測定することができる．
+        \item 回帰の場合，通常2乗誤差損失$(y-\hat{y})^2$が用いられる．
+        \item 分類の場合，通常は0-1損失関数$\Loss (y,\hat{y})=\mathbf{1}\left\{y\neq \hat{y}\right\}\begin{cases}0&\text{if }y=\hat{y}\\1&\text{if }y\neq\hat{y}\end{cases}$が用いられる．
+        \item この本の後半ではcross-entropy loss(交差エントロピー損失)やhinge loss function(ヒンジ損失関数)などの他の損失関数も紹介される．
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{2.2 Supervised Learning}
+    \begin{itemize}
+        \item 関数$g$が，正確に対$(\boldsymbol{x},y)$を予測することはほとんどありえない
+        \item なぜなら，同じ入力$\boldsymbol{x}$でも偶然の状況やランダム性によってことなる出力$y$が得られる可能性があるから
+        \item したがって確率論のアプローチを採用．各対$(\boldsymbol{x},y)$に対して何らかのjoint probability density(結合確率密度 同時確率密度のこと？)$f(\boldsymbol{x},y)$を持つランダムな対$(\boldsymbol{X},Y)$の結果であると仮定する
+        \item 予測性能は，期待損失(通常 riskと呼ばれる)によって評価する．
+    \end{itemize}
+    \begin{align*}
+        \ell(g) = \mathbb{E} \Loss (Y,g(\boldsymbol{X}))
+    \end{align*}
+\end{frame}
+
+\begin{frame}
+    \frametitle{2.2 Supervised Learning}
+    \begin{itemize}
+        \item 分類問題なら，0-1損失関数を用いて，リスクは$\ell(g) = \mathbb{P}[Y\neq g(\boldsymbol{X})]$となる．
+        \item このい文脈で，予測関数$g$は classifier(分類器)と呼ばれる．
+        \item $(\boldsymbol{X},Y)$の分布が与えられたとき，原理的に最良の$g^*=\arg\min_g \mathbb{E}[\Loss (Y,g(\boldsymbol{X}))]$を見つけることができる．(これはすなわち$g^*$が最小リスクを与えるということ)
+        \item 第7章では，分類問題において$g^*(\boldsymbol{x})=\arg\max _{y\in\left\{0,\dots,c-1\right\}} f(y|\boldsymbol{x})$について調べる．
+              \begin{itemize}
+                  \item ここで$f(y|\boldsymbol{x})=\mathbb{P}[Y=y|\boldsymbol{X}=\boldsymbol{x}]$は$\boldsymbol{X}=\boldsymbol{x}$が与えられたときの$Y=y$の条件付き確率である
+              \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{2.2 Supervised Learning}
+    \begin{itemize}
+        \item 回帰で最も広く使われる損失関数は2乗誤差損失である（前述）
+        \item この状況で，最適予測関数$g^*$はしばしば regression function(回帰関数)と呼ばれる
+    \end{itemize}
+    \begin{theorem}[Optimal Prediction Function for Squared-Error Loss]
+        2乗誤差損失$\Loss (y,\hat{y})=(y-\hat{y})^2$に対して，最適予測関数$g^*$は$Y$の$\boldsymbol{X}=\boldsymbol{x}$が与えられたときの条件付き期待値に等しい．
+        \begin{align*}
+            g^*(\boldsymbol{x}) = \mathbb{E}[Y|\boldsymbol{X}=\boldsymbol{x}]
+        \end{align*}
+    \end{theorem}
+\end{frame}
+
+\begin{frame}
+    \frametitle{2.2 Supervised Learning}
+    証明の前に，条件付き期待値の定義やpropertiyを確認する．
+    \begin{definition}[conditional pdf]
+        $X,Y$はpdf$f$に従う離散また連続確率変数とし，$f_X(x)\geq0$とする．\\
+        $X=x$が与えられたときの$Y$の conditional pdf (条件付き確率密度関数)は
+        \begin{align*}
+            f_{Y|X}(y|x) = \frac{f(x,y)}{f_X(x)}
+        \end{align*}
+    \end{definition}
+\end{frame}
+
+\begin{frame}
+    \frametitle{2.2 Supervised Learning}
+
+    \begin{definition}[conditional expectation (条件付き期待値)]
+        $X=x$が与えられたときの$Y$の conditional expectation (条件付き期待値)は
+        \begin{align*}
+            \mathbb{E}[Y|X=x] =\begin{cases}
+                                   \int_\mathbb{R}yf_{Y|X}(y|x)dy \quad \text{discrete case(連続)} \\
+                                   \sum_{y\in\mathbb{R}}yf_{Y|X}(y|x)\quad \text{continuous case(離散)}
+                               \end{cases}
+        \end{align*}
+    \end{definition}
+    $\mathbb{E}[Y|X=x]$は$x$の関数であることに注意．
+    有用な性質として，以下のtower propertyなどがある．それについて示す．
+\end{frame}
+
+\begin{frame}
+    \frametitle{2.2 Supervised Learning}
+    \begin{remark}[tower property, taking out what is known]
+        tower property:
+        \begin{align*}
+            \mathbb{E}[\mathbb{E}[Y|X]] = \mathbb{E}[Y]
+        \end{align*}
+        taking out what is known:
+        \begin{align*}
+            \mathbb{E}[XY|X]=X\mathbb{E}[Y|X]
+        \end{align*}
+    \end{remark}
+\end{frame}
+
+\begin{frame}
+    \frametitle{2.2 Supervised Learning}
+    \begin{proof}
+        tower propertyの証明:
+        \begin{align*}
+            \mathbb{E}[\mathbb{E}[Y|X]] & =\int_\mathbb{R}\mathbb{E}[Y|X=x]f_X(x)dx                                                               \\
+                                        & =\int_\mathbb{R}\left(\int_\mathbb{R}yf_{Y|X}(y|x)dy\right)f_X(x)dx                                     \\
+                                        & =\int_\mathbb{R}\int_\mathbb{R}yf_{Y|X}(y|x)f_X(x)dydx              \quad \because\text{()内部は$x$に依存しない} \\
+                                        & = \int_\mathbb{R}y\int_\mathbb{R}f(x,y)dxdy                                                             \\
+                                        & =\int_\mathbb{R}yf(y)dy                                                                                 \\
+                                        & =\mathbb{E}[Y]
+        \end{align*}
+
+    \end{proof}
+\end{frame}
+\begin{frame}
+    \frametitle{2.2 Supervised Learning}
+    \begin{proof}
+        taking out what is knownの証明:
+        \begin{align*}
+            \mathbb{E}[XY|X] & =\int_\mathbb{R}xyf_{Y|X}(y|x)dy \\
+                             & =x\int_\mathbb{R}yf_{Y|X}(y|x)dy \\
+                             & =X\mathbb{E}[Y|X]
+        \end{align*}
+    \end{proof}
+\end{frame}
+\begin{frame}
+    \frametitle{2.2 Supervised Learning}
+    \begin{proof}
+        $g^*(\boldsymbol{x}) = \mathbb{E}[Y|\boldsymbol{X}=\boldsymbol{x}]$とおく．任意の関数$g$に対し，2乗誤差損失は
+        \begin{align*}
+            \mathbb{E}[(Y-g(\boldsymbol{X}))^2] & =\mathbb{E}[(Y-g^*(\boldsymbol{X}+\boldsymbol{X}-g(\boldsymbol{X}))^2]                                                                                                                           \\
+                                                & \tiny =\mathbb{E}[(Y-g^*(\boldsymbol{X}))^2]+2\mathbb{E}[(g^*(\boldsymbol{X})-g(\boldsymbol{X}))^2]+2\mathbb{E}[(Y-g^*(\boldsymbol{X}))(g^*(\boldsymbol{X})-g(\boldsymbol{X}))] \normalsize      \\
+                                                & \geq \mathbb{E}[(Y-g^*(\boldsymbol{X}))^2] + 2\mathbb{E}[(Y-g^*(\boldsymbol{X}))(g^*(\boldsymbol{X})-g(\boldsymbol{X}))]                                                                         \\
+                                                & \footnotesize = \mathbb{E}[(Y-g^*(\boldsymbol{X}))^2] + 2\mathbb{E}\left[\mathbb{E}\left[(Y-g^*(\boldsymbol{X}))(g^*(\boldsymbol{X})-g(\boldsymbol{X}))| \boldsymbol{X}\right]\right]\normalsize \\
+                                                & \footnotesize = \mathbb{E}[(Y-g^*(\boldsymbol{X}))^2] + 2\mathbb{E}\left[(g^*(\boldsymbol{X})-g(\boldsymbol{X}))\mathbb{E}[Y-g^*(\boldsymbol{X})|\boldsymbol{X}]\right] \normalsize              \\
+        \end{align*}
+        最後から2行の等式には tower propertyを，最後の行には taking out what is knownを用いた．どちらも条件付き期待値の性質である．
+        \renewcommand{\qedsymbol}{}
+    \end{proof}
+\end{frame}
+
+\begin{frame}
+    \frametitle{2.2 Supervised Learning}
+    \begin{proof}
+        定義より，
+        \begin{align*}
+            \mathbb{E}[Y-g^*(\boldsymbol{X})|\boldsymbol{X}] & =\int_\mathbb{R}(y-g^*(\boldsymbol{x}))f_{Y|\boldsymbol{X}}(y|\boldsymbol{x})dy                                                      \\
+                                                             & =\int_\mathbb{R}yf_{Y|\boldsymbol{X}}(y|\boldsymbol{x})dy-\int_\mathbb{R}g^*(\boldsymbol{x})f_{Y|\boldsymbol{X}}(y|\boldsymbol{x})dy \\
+                                                             & = \mathbb{E}[Y|\boldsymbol{X}]-\mathbb{E}[Y|X]\int_\mathbb{R}\frac{f(x,y)}{f_X(x)}dy                                                 \\
+                                                             & =0                                                                                                                                   \\
+            \because\int_\mathbb{R}\frac{f(x,y)}{f_X(x)}dy   & =\frac{1}{f_X(x)}\int_\mathbb{R}f(x,y)dy                                                                                             \\
+                                                             & =\frac{1}{f_X(x)}f_X(x)=1
+        \end{align*}
+        \renewcommand{\qedsymbol}{}
+    \end{proof}
+\end{frame}
+
+\begin{frame}
+    \frametitle{2.2 Supervised Learning}
+    \begin{proof}
+        したがって$\mathbb{E}[(Y-g(\boldsymbol{X}))^2]\geq\mathbb{E}[(Y-g^*(\boldsymbol{X}))^2]$となり，これは$g^*$が最小の2乗誤差損失リスクを与えることを意味する．
+    \end{proof}
+    この定理のから，$\boldsymbol{X}=\boldsymbol{x}$を条件とするとき，ランダムな応答$Y$は
+    \begin{align*}
+        Y=g^*(\boldsymbol{x})+\varepsilon(\boldsymbol{x})
+    \end{align*}
+    と書くことができる．ここで$\varepsilon(\boldsymbol{x})$は$\boldsymbol{x}$における応答の条件付き平均からのランダムな偏差とみなすことができる．このランダムな偏差は$\mathbb{E}[\varepsilon(\boldsymbol{x})]=0$を満たす．さらに，ある正の関数$\nu$を用いて$\Var[\varepsilon(\boldsymbol{x})]=\nu^2(\boldsymbol{x})$と書くことができる．一般に$\varepsilon(\boldsymbol{x})$は$\boldsymbol{x}$に依存するが，$\nu^2(\boldsymbol{x})$の確率分布は特定できない．
+\end{frame}
+
+\begin{frame}
+    \frametitle{2.2 Supervised Learning}
+    \begin{itemize}
+        \item 最適予測関数$g^*$は通常，未知である$(\boldsymbol{X},Y)$の同時分布に依存するため，実際には利用できない
+        \item その代わりに利用できるものは，同時確率密度$f(x,y)$から独立に得られた有限個の実現値のみ
+        \item これらのサンプルを
+              \begin{align*}
+                  \mathcal{T} =\left\{(\boldsymbol{X}_1,Y),\dots,(\boldsymbol{X}_n,Y)\right\}
+              \end{align*}
+              とし、これをtraining set(訓練セット)と呼ぶ．
+        \item traning set $\mathcal{T}$とその実現値$(\boldsymbol{x}_1,y_1),\dots,(\boldsymbol{x}_n,y_n)$を区別することが重要．後者は$\tau$とし，サイズを強調したいときは$\tau_n$と書く．($\tau$は実際に観測された具体的なデータで、$\mathcal{T}$はまだ観測していないランダムなデータ集合のことか？)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{2.2 Supervised Learning}
+    \begin{itemize}
+        \item 目標：training set $\mathcal{T}$にある$n$個のサンプルから未知の$g$を"learn"(学習)すること
+        \item $g_\mathcal{T}$を，$\mathcal{T}$から構築できる$g^*$の（何らかの基準による）最良の近似とする．$g$はランダムな関数であることに注意
+        \item 特定の結果に関しては$g_\tau$とする．
+        \item ここで，教師と学習者という比喩を用いて教師あり学習について考えることができる
+              \begin{itemize}
+                  \item $g_\mathcal{T}$は未知の関数$g^*:\boldsymbol{x}\mapsto y$を訓練データ$\mathcal{T}$から学習するleaner(学習者)
+                  \item 出力$Y_i$と入力$\boldsymbol{X}_i$の真の関係を表すようなサンプルを$n$個提供するteacher(教師)は，新しい入力$X$に対する出力を予測するために学習者$g_\mathcal{T}$をtrain(訓練)する．この$X$に対する正しい出力$Y$は教師によって提供されない（未知）
+              \end{itemize}
+    \end{itemize}
+\end{frame}
+
+
+
+\begin{frame}
+    \frametitle{2.2 Supervised Learning}
+    \begin{itemize}
+        \item 例：メールのスパム判定
+              \begin{itemize}
+                  \item 各メールを特徴ベクトル$\boldsymbol{x}$（例：単語の出現回数など）で表現し、ラベル$y$（スパム/非スパム）を予測．
+                  \item 学習データには多くのメールとそのラベルが含まれる．
+                  \item 学習済みの$g$を使い、新しいメールがスパムかどうかを判定できる．
+              \end{itemize}
+        \item このような問題では、条件付き確率密度$f(y|\boldsymbol{x})$が分かれば、最適な予測関数$g^*(\boldsymbol{x})$を理論的に求めることができる．
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{2.2 Supervised Learning}
+    \begin{itemize}
+        \item Unspervised Learning(教師なし学習)では、応答変数（ラベル）は与えられず、データ$\boldsymbol{x}$の構造や分布を学習することが目的．
+        \item 例：スーパーの顧客購買行動の分析
+              \begin{itemize}
+                  \item 100種類の商品について、各顧客が購入したかどうかを$0$/$1$のベクトル$\boldsymbol{x} \in \{0,1\}^{100}$で表現．
+                  \item ラベルは存在せず、顧客の購買パターンやクラスタを自動的に発見する．
+                  \item 例：似た購買傾向を持つ顧客グループの発見、異常な購買パターンの検出など．
+              \end{itemize}
+        \item 教師なし学習では、$f(\boldsymbol{x})$（データの分布）を推定し、$g(\boldsymbol{x})$はその近似となる．
+        \item リスクは$\ell(g) = \mathbb{E}[\Loss(f(\boldsymbol{X}), g(\boldsymbol{X}))]$で評価される．
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{2.2 Supervised Learning}
+    教師なし学習の主な手法として
+    \begin{itemize}
+        \item クラスタリング：データを似たグループに分ける
+        \item 主成分分析（PCA）：高次元データを低次元に圧縮し、特徴を抽出
+        \item カーネル密度推定：データの分布をなめらかに推定
+    \end{itemize}
+    がある．これらの手法は第4章で詳しく説明される．
+\end{frame}
+
+\begin{frame}
+    \frametitle{今後の章の内容}
+    \begin{itemize}
+        \item 次の章では主に教師あり学習（回帰・分類）に焦点を当てて解説
+        \item 主な手法：回帰（regression）、分類（classification）
+        \item より高度な手法（再生カーネルHilbert空間、決定木、深層学習など）は第6, 8, 9章で扱う
+    \end{itemize}
+\end{frame}
+
+
+
+\end{document}
