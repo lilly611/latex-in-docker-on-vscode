@@ -42,11 +42,11 @@
 \newtheorem{question}[thm]{Question}
 \newtheorem{prob}[thm]{Problem}
 \newtheorem{rev}[thm]{Review}
-
+\DeclareMathOperator{\argmin}{argmin}
 
 % メタ情報
 \begin{document}
-\title[]{カーネル主成分分析}
+\title[]{Data Science and Machine Learning}
 \author[]{照屋 佑喜仁}
 \institute[]{}
 \date{\today}
@@ -59,5 +59,91 @@
 % 目次（\section 名が自動で挿入される）
 \begin{frame}
     \tableofcontents
+\end{frame}
+
+\section{2.4 Tradeoffs in Statical Learning}
+\subsection{教師あり学習の技術}
+\begin{frame}
+    \frametitle{教師あり学習}
+    \begin{itemize}
+        \item 教師あり学習における機械学習の技術
+              \begin{itemize}
+                  \item generalization risk(2.5)あるいはexpected generalization risk(2.6)をできるだけ小さくする
+                  \item できるだけ少ない計算リソースで
+              \end{itemize}
+        \item これを達成するために，適切な予測関数の集合$\mathcal{G}$を選ぶ必要がある．この選び方は下のような要因によって決まる．
+              \begin{itemize}
+                  \item 集合の複雑さ(最適な予測関数$g^*$を適切に近似，あるいは含むのに十分に複雑(豊か)か？)
+                  \item (2.4)の最適化によって学習者を訓練する容易さ
+                  \item 集合$\mathcal{G}$において，training loss(2.3)がrisk(2.1)をどれだけ正確に推定するか
+                  \item 連続なのか，分類なのか……
+              \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\subsection{Tradeoff}
+\begin{frame}
+    \frametitle{Tradeoff}
+    \begin{itemize}
+        \item 集合$\mathcal{G}$の選択は，通常トレードオフを伴う
+              \begin{itemize}
+                  \item 単純な$\mathcal{G}$からの学習器は早く訓練できるが，上手く近似できない可能性
+                  \item $g^*$を含むような豊かな$\mathcal{G}$からの学習器は多くの計算リソースを必要とする可能性
+              \end{itemize}
+        \item モデルの複雑さ，計算の単純さ，推定の制度の関係を見るために2つのtradeoffについて考えていく
+              \begin{itemize}
+                  \item the approxiation-estimation tradeoff(近似-推定トレードオフ)
+                  \item the bias-variance tradeoff(バイアス-分散トレードオフ)
+              \end{itemize}
+    \end{itemize}
+    今，generalization risk(2.5)を３つの要素に分解して考える．
+    \begin{align*}
+        \ell(g^\mathcal{G}_\tau)=\underbrace{\ell^*}_\text{irreducible risk}+\underbrace{\ell(g^\mathcal{G})-\ell^*}_\text{approximation error}+\underbrace{\ell(g^\mathcal{G}_\tau)-\ell(g^\mathcal{G})}_\text{statistical error} \tag{2.16}
+    \end{align*}
+\end{frame}
+\subsection{irreducible risk, approxiation error, statistical error}
+\begin{frame}
+    \frametitle{irreducible risk，approximation error}
+    \begin{align*}
+        \ell(g^\mathcal{G}_\tau)=\underbrace{\ell^*}_\text{irreducible risk}+\underbrace{\ell(g^\mathcal{G})-\ell^*}_\text{approximation error}+\underbrace{\ell(g^\mathcal{G}_\tau)-\ell(g^\mathcal{G})}_\text{statistical error}\tag{2.16}
+    \end{align*}
+    \begin{itemize}
+        \item \alert{$\ell^*$}は$\ell(g^*)$で定義されるirreducible risk(還元不能リスク)．どの学習器も$\ell^*$より小さいリスクで予測することはできない．
+        \item \alert{$g^\mathcal{G}$}は$\argmin_{g\in\mathcal{G}}\ell(g)$で定義される，$\mathcal{G}$内で最も最良の学習器．
+        \item \alert{$\ell(g^\mathcal{G})-\ell^*$}はapproximation error(近似誤差)．irreducible riskと$\mathcal{G}$のなかで最良の予測関数のriskの差を見ている．
+              \begin{itemize}
+                  \item 適切な$\mathcal{G}$を選び, その上で$\ell(g)$を最小化するのは，単純に数値解析と関数解析の問題となる(ここで訓練データ$\tau$は登場しないから)
+                  \item $\mathcal{G}$が$g^*$を含まなければ近似誤差は任意に小さく出来ずriskを大きくする要因となる
+                  \item 近似誤差を減らす唯一の方法は，$\mathcal{G}$を大きくしてより多くの関数を含めること
+              \end{itemize}
+    \end{itemize}
+\end{frame}
+\begin{frame}
+    \frametitle{statical (estimation) error}
+    \begin{align*}
+        \ell(g^\mathcal{G}_\tau)=\underbrace{\ell^*}_\text{irreducible risk}+\underbrace{\ell(g^\mathcal{G})-\ell^*}_\text{approximation error}+\underbrace{\ell(g^\mathcal{G}_\tau)-\ell(g^\mathcal{G})}_\text{statistical error}\tag{2.16}
+    \end{align*}
+    \begin{itemize}
+        \item \alert{$\ell(g^\mathcal{G}_\tau)-\ell(g^\mathcal{G})$}はstatistical(estimation) error(統計的(推定)誤差)．訓練セット$\tau$に依存．特に，学習器$g^\mathcal{G}_\tau$が$\mathcal{G}$の最良の予測関数$g^\mathcal{G}$をどれだけ上手く推定しているかに依存している．\\(良い予測器なら)この誤差は訓練サイズが無限大に近づくにつれて(確率的に，または期待値として)0に収束するはずである．
+    \end{itemize}
+\end{frame}
+\subsection{approximation-estimation tradeoff}
+\begin{frame}
+    \frametitle{approximation-estimation tradeoff}
+    approximation-estimation tradeoff(近似-推定トレードオフ)は，２つの相反する要求を対立させる．
+    \begin{itemize}
+        \item $\mathcal{G}$が十分にシンプルで，統計的誤差が大きくなりすぎない必要がある．（推定しやすい？）
+        \item $\mathcal{G}$が十分に充実して，近似誤差が小さいことを保証する必要がある．（$g^*$をできれば見つけたい？）
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{2乗誤差損失でのリスクを解釈してみる}
+    2乗誤差損失のリスクは$\ell(g^\mathcal{G}_\tau)=\mathbb{E}\left[(Y-g^\mathcal{G}_\tau(\boldsymbol{X}))^2\right]$となる．このとき，最適な予測関数は$g^*(\boldsymbol{x})=\mathbb{E}\left[Y\mid \boldsymbol{X}=\boldsymbol{x}\right]$で与えられるのであった．(theorem2.1)\\
+    このとき，分解(2.16)は以下のように解釈できる．
+    \begin{itemize}
+        \item $\ell^*=\mathbb{E}\left[(Y-g^*(\boldsymbol{X}))^2\right]$は還元不能誤差であり，これより小さい期待2乗誤差の予測関数はない．
+        \item
+    \end{itemize}
 \end{frame}
 \end{document}
