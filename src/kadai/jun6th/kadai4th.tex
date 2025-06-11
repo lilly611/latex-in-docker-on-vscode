@@ -1,0 +1,88 @@
+\documentclass[a4j,uplatex]{jsarticle}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{physics}
+\usepackage{geometry}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage[dvipdfmx]{color}
+\geometry{margin=2.5cm}
+\usepackage{xcolor}
+\newcommand{\speaker}[1]{\textbf{\textcolor{blue}{#1}}}
+\newcommand{\speakerA}[1]{\textbf{\textcolor{red}{#1}}}
+\newcommand{\speakerB}[1]{\textbf{\textcolor{green!60!black}{#1}}}
+\newenvironment{dialogue}
+{%
+    \begin{quote}
+        \setlength{\parskip}{0.5em}
+        \setlength{\parindent}{0em}
+        }
+        {%
+    \end{quote}
+}
+
+\newcommand{\say}[2]{\speaker{#1:} #2\par}
+\newcommand{\sayA}[2]{\speakerA{#1:} #2\par}
+\newcommand{\sayB}[2]{\speakerB{#1:} #2\par}
+
+\theoremstyle{definition}
+\newtheorem{dfn}{Definition}[section]
+\newtheorem*{df*}{Definition}
+\newtheorem{prop}[dfn]{Proposition}
+\newtheorem{lem}[dfn]{Lemma}
+\newtheorem{thm}[dfn]{Theorem}
+\newtheorem{cor}[dfn]{Corollary}
+\newtheorem{rem}[dfn]{Remark}
+\newtheorem{fact}[dfn]{Fact}
+\newtheorem*{problem*}{問題}
+%定義の：＝を書くためのやつ
+\def\coloneqq{\mathrel{\mathop:}=}%
+\DeclareMathOperator{\loss}{Loss}
+
+\title{数理・人工知能のフロンティアと社会価値創造 課題 4日目}
+\author{理学部4年 1SC22317Y 照屋佑喜仁}
+
+\begin{document}
+\maketitle
+このレポートでは実際のデータに統計的因果探索を適用し結果を考察する．CSR企業総覧(雇用・人材活用編)2022年度版のデータを使用し，企業の雇用環境とESGスコア(Environment, Social, Govermentの3つの観点から企業を第三者機関がスコアをつけている)の関係を調べる．
+ESGスコアと因果関係があると考えられる変数を選び，pythonのlingamライブラリを用いて分析した．以下，用いた変数について述べる．
+\begin{itemize}
+    \item \textbf{環境}：ESGスコアのE，環境のスコア．東洋経済CSRによる．
+    \item \textbf{社会性}：ESGスコアのS，社会性のスコア．
+    \item \textbf{企業統治}：ESGスコアのG，企業統治のスコア．
+    \item \textbf{勤続年数合計/前期}：単位　年
+    \item \textbf{平均年間給与/前期}：単位　円
+    \item \textbf{年間総労働時間}：単位　時間
+    \item \textbf{月平均残業時間}:単位　時間
+    \item \textbf{月平均残業手当}:単位　時間
+    \item \textbf{有休取得率/前期}:単位　％
+    \item \textbf{有休取得率/前期}:フレックス制採用は1，不採用なら0のダミー変数
+\end{itemize}
+(分析結果をこのレポート内に載せたかったのだが，エラーが処理できず同じファイル（メール）に添付しておりますのでそちらを確認お願いいたします．申し訳ございません．)\vskip.5\baselineskip
+この結果から考察できることとして，
+\begin{itemize}
+    \item フレックス制について
+          \begin{itemize}
+              \item 有給取得率に負の影響がある．フレックス制の代わりに有休が減っている可能性
+              \item 社会性のスコアにも負の影響がある．通常，フレックス制はGスコアにプラスに働くと考えられるのでうまく推定できていない可能性がある．（巡回しているもしくは考慮していない変数の影響がある）
+              \item 年間総労働時間に正の影響がある．1日あたりの業務量や作業時間が減った可能性がある．
+          \end{itemize}
+    \item 環境(スコア)について
+          \begin{itemize}
+              \item 選んだ変数から環境スコアに影響があると考えられる要因がほとんどない．省いても良かった．
+              \item 年間平均給与や企業統治，残業手当にかなりの正の影響を及ぼしているが，これは環境のスコアが高い企業は環境についての取り組みをする余裕がある大手企業であると考えられる．
+          \end{itemize}
+    \item 社会性(スコア)について
+          \begin{itemize}
+              \item フレックス制や連続勤務年数から負の影響を受けているが，通常逆の影響を受けると考えられるので仮定や変数の選び方が適切でない可能性が高い．
+              \item 給与に正の高い影響を及ぼしているが，これはおそらく環境スコアと同じ現象が起きていると考えられる．
+          \end{itemize}
+    \item 企業統治(スコア)について
+          \begin{itemize}
+              \item Gスコアは，例えば管理体制のクリアかどうかや，株主への説明責任を果たしているかなど経営の透明さなどがスコアに影響するためこの変数からは有用な結果が得られていない．
+          \end{itemize}
+\end{itemize}
+
+と考察した．全体的に変数の選び方や仮定が適切でないと考えられる結果が多かったが，フレックス制については考察できる結果が得られた．
+\end{document}

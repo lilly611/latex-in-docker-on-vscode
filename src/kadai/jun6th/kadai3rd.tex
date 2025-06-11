@@ -1,0 +1,52 @@
+\documentclass[a4j,uplatex]{jsarticle}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{physics}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{xcolor}
+\newcommand{\speaker}[1]{\textbf{\textcolor{blue}{#1}}}
+\newcommand{\speakerA}[1]{\textbf{\textcolor{red}{#1}}}
+\newcommand{\speakerB}[1]{\textbf{\textcolor{green!60!black}{#1}}}
+\newenvironment{dialogue}
+{%
+    \begin{quote}
+        \setlength{\parskip}{0.5em}
+        \setlength{\parindent}{0em}
+        }
+        {%
+    \end{quote}
+}
+
+\newcommand{\say}[2]{\speaker{#1:} #2\par}
+\newcommand{\sayA}[2]{\speakerA{#1:} #2\par}
+\newcommand{\sayB}[2]{\speakerB{#1:} #2\par}
+
+\theoremstyle{definition}
+\newtheorem{dfn}{Definition}[section]
+\newtheorem*{df*}{Definition}
+\newtheorem{prop}[dfn]{Proposition}
+\newtheorem{lem}[dfn]{Lemma}
+\newtheorem{thm}[dfn]{Theorem}
+\newtheorem{cor}[dfn]{Corollary}
+\newtheorem{rem}[dfn]{Remark}
+\newtheorem{fact}[dfn]{Fact}
+\newtheorem*{problem*}{問題}
+%定義の：＝を書くためのやつ
+\def\coloneqq{\mathrel{\mathop:}=}%
+\DeclareMathOperator{\loss}{Loss}
+
+\title{数理・人工知能のフロンティアと社会価値創造 課題 3日目}
+\author{理学部4年 1SC22317Y 照屋佑喜仁}
+
+\begin{document}
+\maketitle
+Q1について日本語で述べる．\vskip.5\baselineskip
+私の専門分野は統計、特にベイズ統計である。これは、データから確率的な推論を行い、不確実性を定量的に扱う手法である。ABM（エージェントベースモデリング）は、個々のエージェントの行動と相互作用から社会システムを再現するシミュレーション手法であり、この両者を統合することで、社会問題解決に貢献できると考える。
+エージェントの意思決定確率や学習率といったパラメータは、現実世界のデータから統計的に推定し、その不確実性を含めてモデルに組み込める。これにより、主観的な仮定に頼らず、データに基づいたより現実的なエージェント行動をシミュレートできる。
+さらに、ABMの出力するマクロな現象と現実の観測データを比較する際、ベイズ的な手法を用いて、最適なエージェントパラメータを推定できると考えられる。例えば、新しい公共サービス導入時の利用者の行動変容予測において、統計モデルで個人の属性と選択行動の関係を推定し、ABMに適用することで、より正確な政策効果を評価できる。
+このように、統計、特にベイズ統計はABMにデータ駆動型の厳密な推論と不確実性評価の枠組みをもたらす。これはエージェント行動モデリングの精度向上とシミュレーション結果の信頼性向上に直結し、複雑な社会問題を深く理解し、データに基づいた効果的な政策立案を支援する強力なツールとなるだろう。(572 words)
+
+\end{document}

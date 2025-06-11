@@ -1,0 +1,71 @@
+\documentclass[a4j,uplatex]{jsarticle}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{physics}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{xcolor}
+\newcommand{\speaker}[1]{\textbf{\textcolor{blue}{#1}}}
+\newcommand{\speakerA}[1]{\textbf{\textcolor{red}{#1}}}
+\newcommand{\speakerB}[1]{\textbf{\textcolor{green!60!black}{#1}}}
+\newenvironment{dialogue}
+{%
+    \begin{quote}
+        \setlength{\parskip}{0.5em}
+        \setlength{\parindent}{0em}
+        }
+        {%
+    \end{quote}
+}
+
+\newcommand{\say}[2]{\speaker{#1:} #2\par}
+\newcommand{\sayA}[2]{\speakerA{#1:} #2\par}
+\newcommand{\sayB}[2]{\speakerB{#1:} #2\par}
+
+\theoremstyle{definition}
+\newtheorem{dfn}{Definition}[section]
+\newtheorem*{df*}{Definition}
+\newtheorem{prop}[dfn]{Proposition}
+\newtheorem{lem}[dfn]{Lemma}
+\newtheorem{thm}[dfn]{Theorem}
+\newtheorem{cor}[dfn]{Corollary}
+\newtheorem{rem}[dfn]{Remark}
+\newtheorem{fact}[dfn]{Fact}
+\newtheorem*{problem*}{問題}
+%定義の：＝を書くためのやつ
+\def\coloneqq{\mathrel{\mathop:}=}%
+\DeclareMathOperator{\loss}{Loss}
+
+\title{数理・人工知能のフロンティアと社会価値創造 課題 2日目}
+\author{理学部4年 1SC22317Y 照屋佑喜仁}
+
+\begin{document}
+\maketitle
+レポート課題の例の場合を考えてみる．つまり
+\begin{itemize}
+    \item 糖尿病患者などの血糖値測定では、食後の血糖値がある閾値を超えるかどうかを予測したい。
+    \item データは大半が食後ではない低血糖の状態のため、血糖値が低い状態の精度が高い一方、重要な高血糖の状態の精度が低い問題があります。高血糖の方が精度が高いモデルを作りたい。
+
+\end{itemize}
+というような状況でどのようなloss functionを設定するか考える．\vskip.5\baselineskip
+このような状況で，loss functionとしてよく使われるような関数(例えば平均2乗誤差MSEなど)を用いてしまうと，異常値に反応しないモデルになる可能性がある．
+そこで私はloss functionに正則化を導入しようと考えた．非線形の回帰分析等では，データに当てはまりが良すぎると過学習してしまい予測に使えないため正則化（罰則を設ける）するということをゼミで学んだ．それを使うことができないだろうかという目論見である．\vskip.5 \baselineskip
+
+以下を提案する．簡単のため学習データは（時間で）分割したものを考える．
+\begin{align*}
+    \loss (\boldsymbol{y},\boldsymbol{\hat{y}}) & = \frac{1}{n}\sum_{i=1}^{n}(y_i-\hat{y}_i)^2+\lambda \sum_{i=1}^{n}\mathbf{1}_{y_i\geq T}\mathbf{1}_{y_i\geq \hat{y}_i} \\
+    \mathbf{1}_{y_i\geq T}                      & =\begin{cases}
+                                                       1 & y_i \geq T \\
+                                                       0 & y_i < T
+                                                   \end{cases}                                                                                                         \\
+    \mathbf{1}_{y_i\geq \hat{y}_i}              & =\begin{cases}
+                                                       1 & y_i \geq \hat{y}_i \\
+                                                       0 & y_i < \hat{y}_i
+                                                   \end{cases}
+\end{align*}
+ただし$n$をデータ数とし，$\boldsymbol{y},\boldsymbol{\hat{y}}$を実際のデータと予測データ，$T$を腎閾値とし，$\lambda$は罰則の重みパラメータとする．\\
+これは通常の平均2乗誤差に罰則を加えたもので，腎閾値を超えていたときに実際の値より下回って予測していた場合に罰則を設けている．ハイパーパラメータをうまく調整することで，低血糖時も高血糖時（閾値を超える場合のみに限ってしまうが）も予測できるのではと考えた．
+
+\end{document}
