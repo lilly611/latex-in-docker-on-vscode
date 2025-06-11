@@ -237,10 +237,216 @@
     \begin{proof}
         ここで，
         \begin{align*}
-            \clubsuit & = \mathbb{E}\left[\left\{g^*(\boldsymbol{X})-g^\mathcal{G}(\boldsymbol{X})+g^\mathcal{G}(\boldsymbol{X})-g^\mathcal{G}_\tau(\boldsymbol{X})\right\}^2\right]                                        \\
-                      & =\mathbb{E}\left[\left\{g^*(\boldsymbol{X})-g^\mathcal{G}(\boldsymbol{X})\right\}^2\right]+\mathbb{E}\left[\left\{g^\mathcal{G}(\boldsymbol{X})-g^\mathcal{G}_\tau(\boldsymbol{X})\right\}^2\right] \\
-                      & \qquad -2\mathbb{E}\left[\left\{g^*(\boldsymbol{X})-g^\mathcal{G}(\boldsymbol{X})\right\}\left\{g^\mathcal{G}(\boldsymbol{X})-g^\mathcal{G}_\tau(\boldsymbol{X})\right\}\right]
+            \clubsuit  & = \mathbb{E}\left[\left\{g^*(\boldsymbol{X})-g^\mathcal{G}(\boldsymbol{X})+g^\mathcal{G}(\boldsymbol{X})-g^\mathcal{G}_\tau(\boldsymbol{X})\right\}^2\right]                                                     \\
+                       & =\mathbb{E}\left[\left\{g^*(\boldsymbol{X})-g^\mathcal{G}(\boldsymbol{X})\right\}^2\right]+\mathbb{E}\left[\left\{g^\mathcal{G}(\boldsymbol{X})-g^\mathcal{G}_\tau(\boldsymbol{X})\right\}^2\right]              \\
+                       & \qquad -\underbrace{2\mathbb{E}\left[\left\{g^*(\boldsymbol{X})-g^\mathcal{G}(\boldsymbol{X})\right\}\left\{g^\mathcal{G}(\boldsymbol{X})-g^\mathcal{G}_\tau(\boldsymbol{X})\right\}\right]}_\text{$\spadesuit$} \\
+            \spadesuit & =2\mathbb{E}\left[\left\{g^*(\boldsymbol{X})-\boldsymbol{X}^T\boldsymbol{\beta}^\mathcal{G}\right\}\left\{\boldsymbol{X}^T\boldsymbol{\beta}^\mathcal{G}-\boldsymbol{X}^T\hat{\boldsymbol{\beta}}\right\}\right] \\
+                       & =2\mathbb{E}\left[\left\{g^*(\boldsymbol{X})-\boldsymbol{X}^T\boldsymbol{\beta}^\mathcal{G}\right\}\boldsymbol{X}^T\right](\boldsymbol{\beta}^\mathcal{G}-\hat{\boldsymbol{\beta}})
         \end{align*}
+        \renewcommand{\qedsymbol}{}
     \end{proof}
 \end{frame}
+
+\begin{frame}
+    \frametitle{excercise3}
+    \begin{proof}
+        \begin{align*}
+            \boldsymbol{\beta}^\mathcal{G}=\argmin_{\boldsymbol{\beta}}\mathbb{E}\left[\left\{g^*(\boldsymbol{X})-\boldsymbol{\beta}^T\boldsymbol{X}\right\}^2\right]
+        \end{align*}
+        であるため，$\frac{\partial}{\partial\boldsymbol{x}}g(f(\boldsymbol{x}))=\frac{\partial f}{\partial \boldsymbol{x}}\frac{\partial g}{\partial\boldsymbol{y}}$や微分と期待値の交換(中間値の定理，優収束定理などで示せる)などに気をつければ，
+        \begin{align*}
+                            & \left.\frac{\partial}{\partial\boldsymbol{\beta}}\mathbb{E}\left[\left\{g^*(\boldsymbol{X})-\boldsymbol{\beta}^T\boldsymbol{X}\right\}^2\right]\right|_{\boldsymbol{\beta}=\boldsymbol{\beta}^\mathcal{G}}=\boldsymbol{0} \\
+            \therefore\quad & 2\mathbb{E}\left[X\left\{\boldsymbol{X}^T\boldsymbol{\beta}^\mathcal{G}\right\}\right]=\boldsymbol{0}
+        \end{align*}
+        よって$\spadesuit=0$となり，exercise2の結果と合わせて$\ell(g^\mathcal{G}_\tau)-\ell(g^\mathcal{G})=\mathbb{E}\left[(g^\mathcal{G}_\tau(\boldsymbol{X})-g^\mathcal{G}(\boldsymbol{X}))^2\right]$が成立．
+    \end{proof}
+
+\end{frame}
+
+% ...前略...
+
+\section{2.5 Bias-Variance Tradeoff}
+
+\subsection{多項式回帰の例（続き）}
+\begin{frame}
+    \frametitle{Example 2.2 多項式回帰の例}
+    $\mathcal{G} = \mathcal{G}_p$は$x$の線形関数の集合で，$\boldsymbol{x} \in [1, u, u^2, ..., u^{p-1}]^T$であり，$g^*(\boldsymbol{x}) = \boldsymbol{x}^T\boldsymbol{\beta}^*$である．
+
+    また，$\boldsymbol{X}=\boldsymbol{x}$で，$Y = g^*(X) + \varepsilon(\boldsymbol{x})$，$\varepsilon(\boldsymbol{x}) \sim \mathcal{N}(0, \ell^*)$，$\ell^* = \mathbb{E}\left[\left\{Y-g^*(\boldsymbol{X})\right\}\right]$とする．
+
+    まず，近似誤差を考える．任意の関数$g \in \mathcal{G}_p$は
+
+    \begin{align*}
+        g(x) = h(u) = \beta_1 + \beta_2 u + \cdots + \beta_p u^{p-1} = [1, u, ..., u^{p-1}]^T \boldsymbol{\beta}
+    \end{align*}
+
+    このとき$g(X)$は$[1, U, ..., U^{p-1}]\boldsymbol{\beta}$として分布し，$U \sim \mathcal{U}(0, 1)$であるとする．同様に，$g^*(\boldsymbol{X})$は$[1, U, U^2,U^3,U^4]\boldsymbol{\beta}^*$として分布するとする．
+\end{frame}
+
+\begin{frame}
+    \frametitle{近似誤差の計算}
+    近似誤差は
+    \begin{align*}
+        \int_{0}^{1}\left([1, U, ..., U^{p-1}]\boldsymbol{\beta}-[1, U, U^2,U^3,U^4]\boldsymbol{\beta}^*\right)^2 du
+    \end{align*}
+    となる．
+    近似誤差を最小化するため，$\boldsymbol{\beta}$で微分して$0$になれば良い．ベクトルをベクトルで微分しており，$\boldsymbol{\beta}$の1つの要素に着目して微分すれば
+    $$\int_0^{1} ([1, u, ..., u^{p-1}] \boldsymbol{\beta} - [1, u, u^2, u^3] \boldsymbol{\beta}^*) du = 0,$$
+    $$\int_0^{1} ([1, u, ..., u^{p-1}] \boldsymbol{\beta} - [1, u, u^2, u^3] \boldsymbol{\beta}^*) u du = 0,$$
+    $$\vdots$$
+    $$\int_0^{1} ([1, u, ..., u^{p-1}]\boldsymbol{\beta} - [1, u, u^2, u^3] \boldsymbol{\beta}^*) u^{p-1} du = 0.$$
+
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{近似誤差の具体的な値}
+    $\mathbf{H}_p = \int_0^{\infty} [1, u, ..., u^{p-1}]^T [1, u, ..., u^{p-1}] du$を$p \times p$ヒルベルト行列とする．
+
+    $(i,j)$要素は$\int_0^{\infty} u^{i+j-2} du = 1/(i+j-1)$で与えられる．
+    線形方程式系は$\mathbf{H}_p \boldsymbol{\beta} = \tilde{\mathbf{H}}\boldsymbol{\beta}^*$とまとめて表すことができる．ここで$\tilde{\mathbf{H}}$は$\mathbf{H}_p$の左上$(p \times 4)$ブロック．解は以下で表される：
+
+    \[
+        \boldsymbol{\beta}_p =
+        \left\{
+        \begin{array}{ll}
+            \dfrac{65}{6}                                                                      & (p = 1)    \\[2ex]
+            \begin{bmatrix} -\dfrac{20}{3}  & 35 \end{bmatrix}^{\mathrm{T}}                    & (p = 2)    \\[3ex]
+            \begin{bmatrix} -\dfrac{5}{2} & 10 & 25 \end{bmatrix}^{\mathrm{T}}                 & (p = 3)    \\[3ex]
+            \begin{bmatrix} 10 & -140 & 400 & -250 & 0 & \cdots & 0 \end{bmatrix}^{\mathrm{T}} & (p \geq 4)
+        \end{array}
+        \right.
+        \tag{2.18}
+    \]
+\end{frame}
+
+\begin{frame}
+    \frametitle{近似誤差の結果}
+    したがって，近似誤差$\mathbb{E}[(g^{\mathcal{G}_p}(X) - g^*(X))^2]$は以下で与えられる：
+
+    \[
+        \int_0^{1} ([1, u, ..., u^{p-1}]\boldsymbol{\beta}_p - [1, u, u^2, u^3]\boldsymbol{\beta}^*)^2 du \simeq
+        \begin{cases}
+            127.9, & p = 1, \\
+            25.8,  & p = 2, \\
+            22.3,  & p = 3, \\
+            0,     & p > 4.
+        \end{cases}
+        \tag{2.19}
+    \]
+
+    $p$が増加するにつれて近似誤差が小さくなることに注目．この例では，$p = 4$で近似誤差がゼロとなる（$p > 4$も同様）．
+
+    一般に，近似する関数のクラス$\mathcal{G}$がより複雑になると，近似誤差は減少する．(前に述べた)
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{統計的誤差}
+    次に，統計的誤差の典型的な挙動を説明する．2乗誤差損失に対して，統計的誤差は以下のように書ける：
+
+    \begin{align*}
+        \int_0^{1} ([1, ..., u^{p-1}](\hat{\boldsymbol{\beta}}-\boldsymbol{\beta}_p))^2du= (\hat{\boldsymbol{\beta}}-\boldsymbol{\beta}_p)^T\mathbf{H}_p (\hat{\boldsymbol{\beta}}-\boldsymbol{\beta}_p) \quad \tag{2.20}
+    \end{align*}
+
+    図2.8は，図2.7でテスト損失の計算に使用されたものと同じ訓練セットに対する凡化リスクの分解(2.17)を示している．
+
+    テストロスは独立したテストデータを使用して推定されることに注意．この場合，2つがよく一致していることがわかる．統計的誤差の最小値は$p = 4$付近にあることがわかる．
+\end{frame}
+
+\begin{frame}
+    \frametitle{図2.8の解釈}
+    \begin{center}
+        % 図2.8の代替テキスト表現
+        \begin{tabular}{|c|c|}
+            \hline
+            パラメータ数$p$ & リスクの構成要素     \\
+            \hline
+            低い$p$     & 近似誤差大，統計的誤差小 \\
+            高い$p$     & 近似誤差小，統計的誤差大 \\
+            \hline
+        \end{tabular}
+    \end{center}
+
+    \begin{itemize}
+        \item 近似誤差は$p$が増加するにつれて$p = 4$でゼロまで減少
+        \item 統計的誤差は$p = 4$後に増加傾向
+        \item 一般化リスクは$p = 4$付近で最小値
+    \end{itemize}
+
+    統計的誤差は推定値$\hat{\beta}$に依存し，これは訓練セット$\tau$に依存することに注意．統計的誤差のより良い理解を得るため期待される挙動，すなわち多くの訓練セットでの平均的な挙動を考慮する必要がある．
+\end{frame}
+
+\subsection{バイアス-分散分解}
+\begin{frame}
+    \frametitle{バイアス-分散分解の導入}
+    もう一度2乗誤差損失を使用し，一般的な$\mathcal{G}$に対するもう一つの分解（バイアス-分散分解）を，近似誤差や統計的誤差の組み合わせで考えていく
+
+    \begin{align*}
+        \ell(g_\tau^{\mathcal{G}}) = \ell^* + \ell(g^\mathcal{G}_\tau)-\ell(g^*)
+    \end{align*}
+
+    Theorem 2.1の証明と同様の推論を使用すると：
+
+    \begin{align*}
+        \ell(g_\tau^{\mathcal{G}}) & = \mathbb{E}[(g_\tau^{\mathcal{G}}(X) - Y)^2] = \ell^* + \mathbb{E}[(g_\tau^{\mathcal{G}}(X) - g^*(X))^2] \\
+                                   & =\ell^*+\mathbb{E}\left[D^2(\boldsymbol{X},\tau)\right]
+    \end{align*}
+
+    ここで$D(\boldsymbol{x}, \tau) := g_\tau^{\mathcal{G}}(X) - g^*(X)$とする．
+\end{frame}
+
+\begin{frame}
+    \frametitle{バイアス-分散分解の展開}
+    ランダムな訓練セット$\mathcal{T}$に対するランダム変数$D(\boldsymbol{x}, \mathcal{T})$について期待2乗誤差は
+
+    \[
+        \mathbb{E}[(g_\tau^{\mathcal{G}}(x) - g^*(x))^2] = \mathbb{E}\left[D^2(\boldsymbol{x},\tau)\right]={\mathbb{E}\left[D(\boldsymbol{x},\tau)\right]}^2+\mathbb{V}\left[D(\boldsymbol{x},\tau)\right]
+    \]
+
+    \[
+        = \underbrace{(\mathbb{E}[g_\tau^{\mathcal{G}}(x)] - g^*(x))^2}_{\text{pointwise squared bias}} + \underbrace{\mathbb{V}[g_\tau^{\mathcal{G}}(x)]}_{\text{pointwise variance}} \tag{2.21}
+    \]
+
+    学習器$g_\tau^{\mathcal{G}}(x)$をランダムな訓練セットの関数と見ると：
+    \begin{itemize}
+        \item \alert{pointwise squared bias}項は$g_\tau^{\mathcal{G}}(x)$が$g^*(x)$から平均的にどれだけ離れているかを測定
+        \item \alert{pointwise variance}項は$g_\tau^{\mathcal{G}}(x)$の期待値からの偏差を測定
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{期待一般化リスクの分解}
+    $X$と$\mathcal{T}$が独立であることに注意．したがって，期待一般化リスク(2.6)は以下のように書ける：
+
+    \begin{align}
+        \mathbb{E}[\ell(g_\tau^{\mathcal{G}})]
+         & = \ell^* + \underbrace{\mathbb{E}\left[\mathbb{E}[g_\tau^{\mathcal{G}}(X) | X] - g^*(X)\right]^2}_\text{expected squared bias} + \underbrace{\mathbb{E}\left[\mathbb{V}(g_\tau^{\mathcal{G}}(X) | X)\right]}_\text{expected variance} \tag{2.22}
+    \end{align}
+
+    これが\alert{バイアス-分散トレードオフ}の基本的な分解である．
+\end{frame}
+
+\begin{frame}
+    \frametitle{バイアス-分散トレードオフの解釈}
+    バイアス-分散分解(2.22)から：
+
+    \begin{itemize}
+        \item \alert{Expected squared bias}: 学習器が真の関数から系統的にどれだけ偏っているかを表す
+              \begin{itemize}
+                  \item 単純なモデル（線形回帰など）は高バイアス
+                  \item 複雑なモデルは低バイアス
+              \end{itemize}
+
+        \item \alert{Expected variance}: 異なる訓練セットに対する学習器の予測のばらつきを表す
+              \begin{itemize}
+                  \item 単純なモデルは低分散
+                  \item 複雑なモデル（高次多項式など）は高分散
+              \end{itemize}
+    \end{itemize}
+
+    \vspace{0.5cm}
+    \alert{トレードオフ}: モデルの複雑さを増すとバイアスは減るが分散は増える．最適な複雑さは両者のバランスで決まる．
+\end{frame}
+
 \end{document}
