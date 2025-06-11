@@ -143,7 +143,104 @@
     このとき，分解(2.16)は以下のように解釈できる．
     \begin{itemize}
         \item $\ell^*=\mathbb{E}\left[(Y-g^*(\boldsymbol{X}))^2\right]$は還元不能誤差であり，これより小さい期待2乗誤差の予測関数はない．
-        \item
+        \item 近似誤差$\ell(g^\mathcal{G})-\ell(g^*)$は$\mathbb{E}\left[g^\mathcal{G}(\boldsymbol{X})-g^*(\boldsymbol{X})^2\right]$に等しい(excrcise2)．つまり，最適予測値と$\mathcal{G}$内の最適予測値との間の２乗誤差の期待値として解釈できる．
     \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{２乗誤差損失でのリスクを解釈してみる}
+    \begin{itemize}
+        \item 統計的誤差$\ell(g^\mathcal{G}_\tau)-\ell(g^\mathcal{G})$に関しては$\mathcal{G}$が線形関数の集合である場合を除いて，期待２乗誤差(mean squared error 平均2乗誤差ともいう)としての直接的な解釈は存在しない．\\
+              $\mathcal{G}$が線形関数集合の場合，関数$g(\boldsymbol{x})$はあるベクトル$\boldsymbol{\beta}$に対して$g(\boldsymbol{x})=\boldsymbol{x}^T\boldsymbol{\beta}$と表すことができ，統計的誤差は$\mathbb{E}\left[(g^\mathcal{G}_\tau(\boldsymbol{X})-g^\mathcal{G}(\boldsymbol{X}))^2\right]$となる(excercise3)．
+    \end{itemize}
+    以上より，２乗誤差損失を用いる場合，線形関数集合$\mathcal{G}$に対するgeneralization riskは
+    \begin{align*}
+        \ell(g^\mathcal{G}_\tau) & =\mathbb{E}\left[(g^\mathcal{G}_\tau(\boldsymbol{X})-Y)^2\right] \\&=\ell^*+\underbrace{\mathbb{E}\left[g^\mathcal{G}(\boldsymbol{X})-g^*(\boldsymbol{X})^2\right]}_\text{近似誤差}+\underbrace{\mathbb{E}\left[(g^\mathcal{G}_\tau(\boldsymbol{X})-g^\mathcal{G}(\boldsymbol{X}))^2\right]}_\text{統計的誤差}
+    \end{align*}
+    統計的誤差だけが訓練データに依存する唯一の項であることに注意．
+\end{frame}
+
+\subsection{excercise2}
+\begin{frame}
+    \frametitle{excercise2}
+    保留していた証明を行う．まず，
+    \begin{align*}
+        \ell(g^\mathcal{G})-\ell(g^*)=\mathbb{E}\left[(g^\mathcal{G}(\boldsymbol{X})-g^*(\boldsymbol{X}))^2\right]
+    \end{align*}
+    を示す．
+    \begin{proof}
+        \begin{align*}
+            \ell(g^\mathcal{G}) & =\mathbb{E}\left[(Y-g^\mathcal{G}(\boldsymbol{X}))^2\right] \quad \text{(2乗誤差を採用したときの定義)}                                                                                                   \\
+                                & =\mathbb{E}\left[\left\{Y-g^*(\boldsymbol{X})+g^*(\boldsymbol{X})-g^\mathcal{G}(\boldsymbol{X})\right\}^2\right]                                                                            \\
+                                & =\underbrace{\mathbb{E}\left[\left\{Y-g^*(\boldsymbol{X})\right\}^2\right]}_\text{$\ell(g^*)$の定義}+\mathbb{E}\left[\left\{g^*(\boldsymbol{X})-g^\mathcal{G}(\boldsymbol{X})\right\}^2\right] \\
+                                & \qquad-\underbrace{2\mathbb{E}\left[\left\{Y-g^*(\boldsymbol{X})\right\}\left\{g^*(\boldsymbol{X})-g^\mathcal{G}(\boldsymbol{X})\right\}\right]}_\text{$\bigstar$}
+        \end{align*}
+        \renewcommand{\qedsymbol}{}
+    \end{proof}
+\end{frame}
+
+\begin{frame}
+    \frametitle{excercise2}
+    \begin{proof}
+        ここで，前々回のTheorem2.1の証明と同様の議論により$\bigstar=0$となるので，
+        \begin{align*}
+            \ell(g^\mathcal{G})-\ell(g^*)=\mathbb{E}\left[(g^\mathcal{G}(\boldsymbol{X})-g^*(\boldsymbol{X}))^2\right]
+        \end{align*}
+        を得る．
+    \end{proof}
+    \begin{remark}[tower property, taking out what is known]
+        tower property:
+        \begin{align*}
+            \mathbb{E}[\mathbb{E}[Y|X]] = \mathbb{E}[Y]
+        \end{align*}
+        taking out what is known:
+        \begin{align*}
+            \mathbb{E}[XY|X]=X\mathbb{E}[Y|X]
+        \end{align*}
+    \end{remark}
+\end{frame}
+\begin{frame}
+    \frametitle{参考(前々回のスライド)}
+    \begin{proof}
+        定義より，
+        \begin{align*}
+            \mathbb{E}[Y-g^*(\boldsymbol{X})|\boldsymbol{X}] & =\int_\mathbb{R}(y-g^*(\boldsymbol{x}))f_{Y|\boldsymbol{X}}(y|\boldsymbol{x})dy                                                      \\
+                                                             & =\int_\mathbb{R}yf_{Y|\boldsymbol{X}}(y|\boldsymbol{x})dy-\int_\mathbb{R}g^*(\boldsymbol{x})f_{Y|\boldsymbol{X}}(y|\boldsymbol{x})dy \\
+                                                             & = \mathbb{E}[Y|\boldsymbol{X}]-\mathbb{E}[Y|X]\int_\mathbb{R}\frac{f(x,y)}{f_X(x)}dy                                                 \\
+                                                             & =0                                                                                                                                   \\
+            \because\int_\mathbb{R}\frac{f(x,y)}{f_X(x)}dy   & =\frac{1}{f_X(x)}\int_\mathbb{R}f(x,y)dy                                                                                             \\
+                                                             & =\frac{1}{f_X(x)}f_X(x)=1
+        \end{align*}
+        \renewcommand{\qedsymbol}{}
+    \end{proof}
+\end{frame}
+
+\subsection{exercise3}
+\begin{frame}
+    \frametitle{excercise3}
+    次に以下を示す．
+    \begin{align*}
+        \ell(g^\mathcal{G}_\tau)-\ell(g^\mathcal{G})=\mathbb{E}\left[(g^\mathcal{G}_\tau(\boldsymbol{X})-g^\mathcal{G}(\boldsymbol{X}))^2\right]
+    \end{align*}
+    \begin{proof}
+        \begin{align*}
+            \ell(g^\mathcal{G}_\tau) & =\mathbb{E}\left[\left\{Y-g^\mathcal{G}_\tau(\boldsymbol{X})\right\}^2\right]                                                             \\
+                                     & =\mathbb{E}\left[\left\{Y-g^*(\boldsymbol{X})+g^*(\boldsymbol{X})-g^\mathcal{G}_\tau(\boldsymbol{X})\right\}^2\right]                     \\
+                                     & =\ell(g^*)+\underbrace{\mathbb{E}\left[\left\{g^*(\boldsymbol{X})-g^\mathcal{G}_\tau(\boldsymbol{X})\right\}^2\right]}_\text{$\clubsuit$}
+        \end{align*}
+        \renewcommand{\qedsymbol}{}
+    \end{proof}
+\end{frame}
+
+\begin{frame}
+    \frametitle{excercise3}
+    \begin{proof}
+        ここで，
+        \begin{align*}
+            \clubsuit & = \mathbb{E}\left[\left\{g^*(\boldsymbol{X})-g^\mathcal{G}(\boldsymbol{X})+g^\mathcal{G}(\boldsymbol{X})-g^\mathcal{G}_\tau(\boldsymbol{X})\right\}^2\right]                                        \\
+                      & =\mathbb{E}\left[\left\{g^*(\boldsymbol{X})-g^\mathcal{G}(\boldsymbol{X})\right\}^2\right]+\mathbb{E}\left[\left\{g^\mathcal{G}(\boldsymbol{X})-g^\mathcal{G}_\tau(\boldsymbol{X})\right\}^2\right] \\
+                      & \qquad -2\mathbb{E}\left[\left\{g^*(\boldsymbol{X})-g^\mathcal{G}(\boldsymbol{X})\right\}\left\{g^\mathcal{G}(\boldsymbol{X})-g^\mathcal{G}_\tau(\boldsymbol{X})\right\}\right]
+        \end{align*}
+    \end{proof}
 \end{frame}
 \end{document}
