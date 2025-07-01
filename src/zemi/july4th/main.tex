@@ -1,0 +1,194 @@
+% This document is based on http://math.shinshu-u.ac.jp/~hanaki/beamer/beamer.html
+\documentclass[dvipdfmx,cjk]{beamer}
+%\documentclass[dvipdfm,cjk]{beamer} % オプションは環境や利用するプログラムによって変える
+%\documentclass[dvips,cjk]{beamer}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{latexsym}
+\usepackage{mathtools}
+%\usepackage{bm} これ使いたいけどなんか使えん
+
+
+% しおり（PDF にしたときの目次）の文字化け防止
+\AtBeginDvi{\special{pdf:tounicode 90ms-RKSJ-UCS2}}
+%\AtBeginDvi{\special{pdf:tounicode EUC-UCS2}}
+
+% 右下のアイコンを消す
+\setbeamertemplate{navigation symbols}{}
+
+% テーマ
+\usetheme{CambridgeUS}
+%\usetheme{Boadilla}           %% Beamer のディレクトリの中の
+%\usetheme{Madrid}             %% beamerthemeCambridgeUS.sty を指定
+%\usetheme{Antibes}            %% 色々と試してみるといいだろう
+%\usetheme{Montpellier}        %% サンプルが beamer\doc に色々とある。
+%\usetheme{Berkeley}
+%\usetheme{Goettingen}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+
+\usecolortheme{rose}          %% colortheme を選ぶと色使いが変わる
+%\usecolortheme{albatross}
+
+%\useoutertheme{shadow}                 %% 箱に影をつける
+\usefonttheme{professionalfonts}       %% 数式の文字を通常の LaTeX と同じにする
+
+%\setbeamercovered{transparent}         %% 消えている文字をうっすらと表示する
+%\setbeamertemplate{theorems}[numbered]  %% 定理に番号をつける
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{proposition}[thm]{Proposition}
+\theoremstyle{example}
+\newtheorem{exam}[thm]{Example}
+\newtheorem{remark}[thm]{Remark}
+\newtheorem{question}[thm]{Question}
+\newtheorem{prob}[thm]{Problem}
+\newtheorem{rev}[thm]{Review}
+\DeclareMathOperator{\argmin}{argmin}
+\DeclareMathOperator{\Gam}{\mathbf{Gamma}}
+
+\AtBeginSection[]{
+    \begin{frame}
+        \tableofcontents[currentsection]
+    \end{frame}
+}
+
+% メタ情報
+\begin{document}
+\title[]{Data Science and Machine Learning}
+\author[]{照屋 佑喜仁}
+\institute[]{}
+\date{\today}
+
+% タイトルスライド
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% 目次（\section 名が自動で挿入される）
+\begin{frame}
+    \tableofcontents
+\end{frame}
+
+\section{2.9 Bayesian Learning}
+\begin{frame}
+    \frametitle{Bayesian Learning}
+    \begin{rev}[Def 2.4]
+        事後確率密度$g(\boldsymbol{\theta}\mid\tau)$は事前確率密度$g(\boldsymbol{\theta})$と尤度$g(\tau\mid\boldsymbol{\theta})$の積に比例するのであった．
+        \begin{align*}
+            g(\boldsymbol{\theta}\mid\tau)\propto g(\tau\mid\boldsymbol{\theta})g(\boldsymbol{\theta})
+        \end{align*}
+    \end{rev}
+    \begin{itemize}
+        \item $g(\boldsymbol{\theta})$は$\mathcal{W}_p$内のKLを最小化する最適な(ベイズ学習機を学習する前の)密度に関する事前情報を与える．この$g(\boldsymbol{\theta})$を用いて，$f(\boldsymbol{x})$のベイズ近似は事前予測密度(prior predictive density)となる．
+              \begin{align*}
+                  g(\boldsymbol{x})=\int g(\boldsymbol{x}\mid\boldsymbol{\theta})g(\boldsymbol{\theta}) d\boldsymbol{\theta}
+              \end{align*}
+    \end{itemize}
+\end{frame}
+\begin{frame}
+    \frametitle{Bayesian Learning}
+    \begin{itemize}
+        \item 一方，事後確率密度は$\mathcal{W}_p$内の$\tau$によって学習されたあとの最適な密度に関して改善された知識を与える．事後確率密度$g(\boldsymbol{\theta}\mid\tau)$を用いて，ベイズ学習器$f(\boldsymbol{\boldsymbol{x}})$は事後予測密度(posterior predictive density)となる．
+              \begin{align*}
+                  g_\tau(\boldsymbol{x})=g(\boldsymbol{x}\mid\tau)=\int g(\boldsymbol{x}\mid\boldsymbol{\theta})g(\boldsymbol{\theta}\mid\tau) d\boldsymbol{\theta}
+              \end{align*}
+              ここで$g(\boldsymbol{x}\mid\boldsymbol{\theta},\tau)=g(\boldsymbol{x}\mid\boldsymbol{\theta})$を仮定した．つまり，尤度は$\boldsymbol{\theta}$を介してのみ$\tau$に依存する．($\tau\rightarrow\boldsymbol{\theta}\rightarrow\text{尤度})$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Bayesian Learning}
+    事前確率密度の選択は，通常次の2つを考慮して行われる．
+    \begin{itemize}
+        \item 事後確率密度の計算あるいはシミュレートが容易となるために十分にシンプルであるべき
+        \item 関心のあるパラメータについて無知をモデル化するために十分に一般的であるべき\\(気持ち：パラメータについてもちろん知らないことがあるから無難なものを使おう？)
+    \end{itemize}
+    パラメータの情報をそれほど多くは持たない事前確率密度はuninformative(無情報)と呼ばれる．一様またはflat(平坦)な事前確率密度がよく用いられる．(Example 2.9)
+\end{frame}
+\begin{frame}
+    \frametitle{Bayesian Learning}
+    \begin{remark}
+        解析や数値計算のために，$\boldsymbol{\theta}$を確率密度$g(\boldsymbol{\theta})$を持つ確率変数ベクトルとみることができ，学習後に事後確率密度$g(\boldsymbol{\theta}\mid\tau)$に更新する．
+    \end{remark}
+    これまでのスライドの議論により，次のように書くことができる．
+    \begin{align*}
+        g(\boldsymbol{x}\mid\tau)\propto \int g(\boldsymbol{x}\mid\boldsymbol{\theta})g(\tau\mid\boldsymbol{\theta})g(\boldsymbol{\theta})d\boldsymbol{\theta}
+    \end{align*}
+    したがって密度関数に影響しない定数は無視しても良い．
+\end{frame}
+\section{EX2.7 Normal Model}
+\begin{frame}
+    \frametitle{Example 2.7 Normal Model}
+    訓練データ$\mathcal{T}=\left\{X_1,\dots,X_n\right\}$が尤度$g(x\mid\boldsymbol{\theta})$を用いてモデル化されると仮定し，$g(x\mid\boldsymbol{\theta})$は
+    \begin{align*}
+        X\mid\boldsymbol{\theta}\sim\mathcal{N}(\mu,\sigma^2)
+    \end{align*}
+    に従う確率密度関数とする．ただし，$\boldsymbol{\theta}\coloneq[\mu,\sigma^2]^\mathsf{T}$である．\vskip.5\baselineskip
+    次に，モデルを完成させるために$\boldsymbol{\theta}$の事前分布を決める必要がある．$\mu$と$\sigma^2$をそれぞれ別の事前分布を定めて，それらの積をとって$\boldsymbol{\theta}$の事前分布を得る(独立性を仮定)．\vskip.5\baselineskip
+    $\mu$の事前分布として次のように決めることができる．
+    \begin{align*}
+        \mu \sim \mathcal{N}(\nu,\phi^2)
+    \end{align*}
+    ベイズモデルでは，事前確率密度のパラメータは通常hyperparametersと呼ばれる．
+\end{frame}
+\begin{frame}
+    \frametitle{Example 2.7 Normal Model}
+    直接$\sigma^2$を与える代わりに，$1/\sigma^2$に対して次の事前分布を設定するのが便利である
+    \begin{align*}
+        \frac{1}{\sigma^2} \sim \Gam(\alpha,\beta)
+    \end{align*}
+    $\alpha$と$\beta$が小さいほど，事前分布の情報量は少なくなる．この事前分布のもとで，$\sigma^2$はinvese gammma distribution(逆ガンマ分布)を持つと呼ばれる．\vskip.5\baselineskip
+    もし$1/Z\sim\Gam(\alpha,\beta)$なら，$Z$の確率密度関数は$\exp(-\beta/x)/x^{\alpha+1}$に比例する．(Exercise 19 後に示す．)
+\end{frame}
+
+\begin{frame}
+    \frametitle{Example 2.7 Normal Model}
+    事後分布を求めるために(次スライドの計算のために)$g(\tau\mid\mu,\sigma^2)$について考えると，
+    \begin{align*}
+        g(\tau\mid\mu,\sigma^2) & \propto \prod_i^n \frac{\exp\left\{(x_i-\mu)^2/(2\sigma^2)\right\}}{(\sigma^2)^{1/2}}      \\
+                                & =\frac{\exp\left\{ \sum_i^n (x_i-\mu)^2/(2\sigma^2)\right\}}{(\sigma^2)^{n/2}}             \\
+                                & =(\sigma^2)^{-n/2}\exp\left\{\frac{\frac{1}{n}\sum_i^n (x_i-\mu)^2}{(2\sigma^2)/n}\right\} \\
+                                & =(\sigma^2)^{-n/2}\exp\left\{\frac{(\mu-\overline{x}_n)^2+S^2_n}{(2\sigma^2)/n}\right\}
+    \end{align*}
+    ただし$S^2_n=\frac{1}{n}\sum_i x_i^2 - \overline{x}^2=\frac{1}{n}\sum_i(x_i-\overline{x})^2$は（平均）標本分散である．
+\end{frame}
+
+\begin{frame}
+    \frametitle{Example 2.7 Normal Model}
+    ベイズ事後確率密度は，
+    \begin{align*}
+        \MoveEqLeft g(\mu,\sigma^2\mid\tau) \propto g(\mu)\times g(\sigma^2)\times g(\tau\mid\mu,\sigma^2)                                                                                                                    \\
+         & \propto \exp \left\{-\frac{(\mu-\nu)^2}{2\phi^2}\right\}\times\frac{\exp \left\{-\beta/\sigma^2\right\}}{(\sigma^2)^{\alpha+1}}\times\frac{\exp\left\{ \sum_i^n (x_i-\mu)^2/(2\sigma^2)\right\}}{(\sigma^2)^{n/2}} \\
+         & \propto (\sigma^2)^{-n/2-\alpha-1}\exp\left\{-\frac{(\mu-\nu)^2}{2\phi^2}-\frac{\beta}{\sigma^2}-\frac{(\mu-\overline{x}_n)^2+S^2_n}{2\sigma^2/n}\right\}
+    \end{align*}
+
+    $(\mu,\sigma^2)$のすべての推論は事後確率密度関数によって表される．
+\end{frame}
+
+\begin{frame}
+    \frametitle{Example 2.7 Normal Model}
+    計算を簡単にするために，事後確率密度関数がよく知っている分布に属しているか調べることが有用である．\vskip.5\baselineskip
+    例えば，$\sigma^2$と$\tau$が与えられたときの$\mu$の条件付き確率密度は
+    \begin{align*}
+        g(\mu\mid\sigma^2,\tau)\propto\exp\left\{-\frac{(\mu-\nu)^2}{2\phi^2}-\frac{(\mu-\overline{x}_n)^2}{2\sigma^2/n}\right\}
+    \end{align*}
+    となる．($\mu$以外を定数とみて，$\mu$についてできるだけ簡単にした)
+    更に簡単にすれば
+    \begin{align*}
+        (\mu\mid\sigma^2,\tau) \sim \mathcal{N}(\gamma_n\overline{x}_n+(1-\gamma_n)\nu,\:\gamma_n\sigma^2/n)
+    \end{align*}
+    ただし$\gamma_n\coloneq\left.\frac{n}{\sigma^2}\middle/\left(\frac{1}{\phi^2}+\frac{n}{\sigma^2}\right)\right.$と定義する．
+\end{frame}
+
+\begin{frame}
+    \frametitle{Example 2.7 Normal Model}
+    事後平均$\mathbf{E}\left[\mu\mid\sigma^2,\tau\right]=\gamma_n\overline{x}_n+(1-\gamma_n)\nu$は事前平均$\nu$と標本平均$\overline{x}_n$の重み付き線形和となっている．また，$n\rightarrow\infty$とするとき，$\gamma_n\rightarrow 1$で，事後平均は最尤推定値$\overline{x}_n$に近づく．\vskip\baselineskip
+\end{frame}
+
+\section{Example 2.8 Normal Model}
+\begin{frame}
+    \frametitle{Example 2.8 Normal Model}
+    $\int g(\boldsymbol{\theta})d\boldsymbol{\theta}=\infty$という意味で真に確率密度ではない事前分布$g(\boldsymbol{\theta})$を用いることがある．ただし，結果として得られる事後分布$g(\boldsymbol{\theta}\mid\tau)\propto g(\tau\mid\boldsymbol{\theta})g(\boldsymbol{\theta})$が適切な確率密度関数になる場合に限る．このような事前分布はimproper prior(広義の事前分布，変則事前分布)と呼ばれる．
+\end{frame}
+\end{document}
