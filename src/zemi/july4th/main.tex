@@ -235,8 +235,13 @@
     $g(\mu)$だけでなく，$\sigma^2$に対しても広義の事前分布を考えることができる．\vskip.5\baselineskip
     $\frac{1}{\sigma^2}\sim\Gam(\alpha,\beta)\quad$(2.44)において$\alpha\rightarrow0,\beta\rightarrow0$とすれば広義の事前分布$g(\sigma^2)\propto 1/\sigma^2$または$g(1/\sigma^2)\propto 1/\sigma^2$を得る．
     \begin{align*}
-        g(1/\sigma^2) & \propto(1/\sigma^2)^{-\alpha-1}e^{-\beta(1/\sigma^2)} \\
-                      &
+        g(\sigma^2) & \propto \frac{\exp(-\beta/\sigma^2) }{(\sigma^2)^{\alpha+1}}         \\
+                    & \longrightarrow \frac{1}{\sigma^2} \qquad \left(\substack{\alpha\to0 \\ \beta\to0}\right)
+    \end{align*}
+    変数変換など用いれば$g(1/\sigma^2)\propto1/\sigma^2$を得る．
+    この場合，$\sigma^2$の周辺事後密度は(天下り的に)
+    \begin{align*}
+        g(\sigma^2/nS^2_n\mid\tau)=g_{\sigma^2\mid\tau}()
     \end{align*}
 \end{frame}
 \end{document}
