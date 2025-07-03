@@ -46,6 +46,7 @@
 \newtheorem{rev}[thm]{Review}
 \DeclareMathOperator{\argmin}{argmin}
 \DeclareMathOperator{\Gam}{\mathbf{Gamma}}
+\newcommand{\abs}[1]{\lvert #1 \rvert}
 
 \AtBeginSection[]{
     \begin{frame}
@@ -138,8 +139,8 @@
     \begin{align*}
         \frac{1}{\sigma^2} \sim \Gam(\alpha,\beta)
     \end{align*}
-    $\alpha$と$\beta$が小さいほど，事前分布の情報量は少なくなる．この事前分布のもとで，$\sigma^2$はinvese gammma distribution(逆ガンマ分布)を持つと呼ばれる．\vskip.5\baselineskip
-    もし$1/Z\sim\Gam(\alpha,\beta)$なら，$Z$の確率密度関数は$\exp(-\beta/x)/x^{\alpha+1}$に比例する．(Exercise 19 後に示す．)
+    $\alpha$と$\beta$が小さいほど，事前分布の情報量は少なくなる．この事前分布のもとで，$\sigma^2$はinverse gamma distribution(逆ガンマ分布)を持つと呼ばれる．\vskip.5\baselineskip
+    もし$1/Z\sim\Gam(\alpha,\beta)$なら，$Z$の確率密度関数は$\exp(-\beta/x)/x^{\alpha+1}$に比例する．(後に示す．Exercise 19 )
 \end{frame}
 
 \begin{frame}
@@ -186,9 +187,56 @@
     事後平均$\mathbf{E}\left[\mu\mid\sigma^2,\tau\right]=\gamma_n\overline{x}_n+(1-\gamma_n)\nu$は事前平均$\nu$と標本平均$\overline{x}_n$の重み付き線形和となっている．また，$n\rightarrow\infty$とするとき，$\gamma_n\rightarrow 1$で，事後平均は最尤推定値$\overline{x}_n$に近づく．\vskip\baselineskip
 \end{frame}
 
+\section{inverse gamma distribution}
+\begin{frame}
+    \frametitle{inverse gamma distribution}
+    後回しにしていたExcercse19を簡単に示す．
+    \begin{theorem}
+        $1/Z\sim \Gam(\alpha,\beta)$ならば，$Z$の確率密度関数は$\exp (-\beta/x)/x^{\alpha+1}$に比例する．
+    \end{theorem}
+    \begin{proof}
+        確率変数の変数変換についての定理(Them C.4)を用いる．\\
+        確率変数$X$を$X=1/Z\sim \Gam(\alpha,\beta)$と定めると，$Z=g(X)=\frac{1}{X}$となる．\\
+        ヤコビアンは$\det J=\det\frac{\partial X}{\partial Z}=-\frac{1}{Z^2}$\\
+        $X$について確率密度関数は$f_X(x)=\frac{\lambda^\alpha x^{\alpha-1} e^{-\lambda x}}{\Gamma(\alpha)}$
+        よって$f_Z(z)=f_X(g^{-1}(z))\abs{J}=\frac{\lambda^\alpha (1/z)^{\alpha-1} e^{-\lambda (1/z)}}{\Gamma(\alpha)}(1/z^2)\propto\frac{\exp (-\beta/z)}{z^{\alpha+1}}$
+    \end{proof}
+\end{frame}
+
 \section{Example 2.8 Normal Model}
 \begin{frame}
     \frametitle{Example 2.8 Normal Model}
-    $\int g(\boldsymbol{\theta})d\boldsymbol{\theta}=\infty$という意味で真に確率密度ではない事前分布$g(\boldsymbol{\theta})$を用いることがある．ただし，結果として得られる事後分布$g(\boldsymbol{\theta}\mid\tau)\propto g(\tau\mid\boldsymbol{\theta})g(\boldsymbol{\theta})$が適切な確率密度関数になる場合に限る．このような事前分布はimproper prior(広義の事前分布，変則事前分布)と呼ばれる．
+    $\int g(\boldsymbol{\theta})d\boldsymbol{\theta}=\infty$という意味で真に確率密度ではない事前分布$g(\boldsymbol{\theta})$を用いることがある．ただし，結果として得られる事後分布$g(\boldsymbol{\theta}\mid\tau)\propto g(\tau\mid\boldsymbol{\theta})g(\boldsymbol{\theta})$が適切な確率密度関数になる場合に限る．このような事前分布はimproper prior(広義の事前分布，変則事前分布)と呼ばれる．\vskip.5\baselineskip
+    例として，$\mu\sim\mathcal{N}(\nu,\phi^2)\quad$(2.43)において$\phi \rightarrow \infty$を考える．($\phi$が大きくなるほど事前分布が無情報となる．)
+    \begin{align*}
+        g(\mu)\propto \exp\left(-\frac{(\mu-\nu)^2}{2\phi^2}\right)\rightarrow 1
+    \end{align*}
+    これより平坦な事前分布となるが$\int g(\mu)d\mu=\infty$となってしまう．事後分布は適切な密度となる．
+\end{frame}
+
+\begin{frame}
+    \frametitle{Example 2.8 Normal Model}
+    特に，$(\mu\mid\sigma^2,\tau)$の条件付き事後分布は
+    \begin{align*}
+        (\mu\mid\sigma^2,\tau)\sim\mathcal{N}\left(\overline{x}_n,\sigma^2/n\right)
+    \end{align*}
+    と簡単になる．これは重みパラメータ$\gamma$が1に収束するからである．また，$\sigma^2$の周辺事後密度は次のように簡単になる．
+    \begin{align*}
+        g(\sigma^2\mid\tau)=\int g(\mu,\sigma^2\mid \tau)d\mu \propto (\sigma^2)^{-(n-1)/2-\alpha-1}\exp\left(-\frac{\beta+nS^2_n/2}{\sigma^2}\right)
+    \end{align*}
+    これは次の関係を持つことが(以前の議論より)わかる．
+    \begin{align*}
+        \left.\frac{1}{\sigma^2}\middle|\right.\tau\sim\Gam(\alpha+\frac{n-1}{2},\beta+\frac{1}{n}S^2_n)
+    \end{align*}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Example 2.8 Normal Model}
+    $g(\mu)$だけでなく，$\sigma^2$に対しても広義の事前分布を考えることができる．\vskip.5\baselineskip
+    $\frac{1}{\sigma^2}\sim\Gam(\alpha,\beta)\quad$(2.44)において$\alpha\rightarrow0,\beta\rightarrow0$とすれば広義の事前分布$g(\sigma^2)\propto 1/\sigma^2$または$g(1/\sigma^2)\propto 1/\sigma^2$を得る．
+    \begin{align*}
+        g(1/\sigma^2) & \propto(1/\sigma^2)^{-\alpha-1}e^{-\beta(1/\sigma^2)} \\
+                      &
+    \end{align*}
 \end{frame}
 \end{document}
