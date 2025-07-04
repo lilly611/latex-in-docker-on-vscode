@@ -7,6 +7,7 @@
 \usepackage{amsfonts}
 \usepackage{latexsym}
 \usepackage{mathtools}
+\usepackage{xcolor}
 %\usepackage{bm} これ使いたいけどなんか使えん
 
 
@@ -239,9 +240,54 @@
                     & \longrightarrow \frac{1}{\sigma^2} \qquad \left(\substack{\alpha\to0 \\ \beta\to0}\right)
     \end{align*}
     変数変換など用いれば$g(1/\sigma^2)\propto1/\sigma^2$を得る．
-    この場合，$\sigma^2$の周辺事後密度は(天下り的に)
+\end{frame}
+
+\begin{frame}
+    \frametitle{Example 2.8 Normal Model}
+    この場合，$\sigma^2$の周辺事後密度について考えると
     \begin{align*}
-        g(\sigma^2/nS^2_n\mid\tau)=g_{\sigma^2\mid\tau}()
+        g(\sigma^2\mid\tau) & =\int g(\mu,\sigma^2\mid\tau)d\mu                                                                              \\
+                            & \propto (\sigma^2)^{-\frac{n-1}{2}-\alpha-1}\exp\left(-\frac{\beta}{\sigma^2}-\frac{S^2_n}{2\sigma^2/n}\right) \\
+                            & \longrightarrow \frac{\exp\left(-\frac{nS^2_n}{2\sigma^2}\right)}{(\sigma^2)^{\frac{n-1}{2}+1}}
     \end{align*}
+    変数変換を施せば
+    \begin{align*}
+        g\left(\frac{\sigma^2}{nS^2_n}\mid\tau\right) & \propto \frac{\exp\left(-\frac{1}{2\sigma^2}\right)}{(nS^2_n\sigma^2)^{\frac{n-1}{2}+1}}                                    \\
+                                                      & \propto \frac{\exp\left(-\frac{{\color{blue}1}}{{\color{blue}2}\sigma^2}\right)}{(\sigma^2)^{{\color{red}\frac{n-1}{2}}+1}} \\
+    \end{align*}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Example 2.8 Normal Model}
+    \begin{align*}
+         & \therefore \left.\frac{nS^2_n}{\sigma^2}\right|\tau\sim\Gam\left(\frac{n-1}{2},\frac{1}{2}\right) \\
+         & \therefore \left.\frac{nS^2_n}{\sigma^2}\right|\tau\sim\chi^2_{n-1}
+    \end{align*}
+    また，$\mu$の周辺事後密度についても考えてみると，
+    \begin{align*}
+        g(\mu\mid\tau) & =\int g(\mu,\sigma^2\mid\tau)d\sigma^2                                                                                                          \\
+                       & \propto \int_{0}^{\infty} (\sigma^2)^{-n/2-1}\exp\left(-\frac{\frac{n}{2}\left\{(\mu-\overline{x}_n)^2+S^2_n\right\}}{\sigma^2}\right)d\sigma^2 \\
+                       & \propto \left\{n(\mu-\overline{x}_n)^2/2+nS^2_n/2\right\}^{n/2}
+    \end{align*}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Example 2.8 Normal Model}
+    \begin{align*}
+        \propto \left\{(\mu-\overline{x}_n)^2+S^2_n\right\}^{n/2}\tag{1}
+    \end{align*}
+    ここで$t=\frac{\mu-\overline{x}_n}{S_n/\sqrt{n-1}}$とおけば，$(\mu-\overline{x}_n)^2=\frac{S_n^2t^2}{n-1}$なので
+    \begin{align*}
+        (1)\propto\left\{1+\frac{t^2}{n-1}\right\}^{n/2}
+    \end{align*}
+    これは自由度$n-1$の$\mathbf{t}$分布に従うことから
+    \begin{align*}
+        \left.\frac{\mu-\overline{x}_n}{S_n/\sqrt{n-1}}\right|\tau\sim \mathbf{t}_{n-1}
+    \end{align*}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Example 2.8 Normal Model}
+    一般に，$\boldsymbol{\theta}$の事後分布に対する簡単な式を導出するのは不可能か手間がかかるため，そのかわりに推論や予測の観点から，事後分布を（近似的に）シュミレートするのに3章のモンテカルロ法が用いられる．
 \end{frame}
 \end{document}
