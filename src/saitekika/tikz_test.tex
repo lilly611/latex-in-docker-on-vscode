@@ -1,0 +1,57 @@
+\documentclass[a4j,uplatex]{jsarticle}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{physics}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+
+\pgfplotsset{compat=1.18}
+
+\theoremstyle{definition}
+\newtheorem{dfn}{Definition}[section]
+\newtheorem*{df*}{Definition}
+\newtheorem{prop}[dfn]{Proposition}
+\newtheorem{lem}[dfn]{Lemma}
+\newtheorem{thm}[dfn]{Theorem}
+\newtheorem{cor}[dfn]{Corollary}
+\newtheorem{rem}[dfn]{Remark}
+\newtheorem{fact}[dfn]{Fact}
+%定義の：＝を書くためのやつ
+\def\coloneqq{\mathrel{\mathop:}=}%
+\DeclareMathOperator{\conv}{conv}
+
+\title{数理最適化大意　課題3}
+\author{理学部4年　照屋佑喜仁}
+
+\begin{document}
+\maketitle
+\section{問題1}
+\begin{tikzpicture}
+    \begin{axis}[
+            axis lines=middle,
+            xmin=-3.5,
+            xmax=3.5,
+            ymin=-1,ymax=10,
+            xtick={-3,-2,-1,0,1,2,3},
+            ytick=\empty,
+            enlargelimits,
+            domain=-3:3,
+            samples=100,
+            axis line style={->},
+            xlabel={$x$},ylabel={$y$},
+            width=10cm,height=6cm,
+        ]
+
+        \addplot[blue,thick,domain=-2:2]{x^2};
+        \addplot[blue,dashed,thick,domain=-3:-2]{x^2};
+        \addplot[blue,dashed,thick,domain=2:3]{x^2};
+        \addplot[red,thick,domain=0:3]{5*sqrt(x)};
+        \addplot[red,thick,domain=0:3]{-5*sqrt(x)};
+
+    \end{axis}
+\end{tikzpicture}
+
+\end{document}
